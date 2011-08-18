@@ -88,8 +88,10 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				world.renderScene(fb);
 				world.draw(fb);
 				
+				
+				// FPS counter for debug...
 				buttonFont.blitString(fb, "fps: "+lfps, 10, 40, 10, RGBColor.WHITE);
-				wlFont.blitString(fb, wl.currentWord, fb.getWidth()-300, fb.getHeight()-300, 10, RGBColor.RED);
+				wlFont.blitString(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-300, fb.getHeight()-300, 10, RGBColor.RED,RGBColor.GREEN);
 				//buttonFont.blitString(fb, "fps: "+lfps, fb.getWidth()-30, 40, 10, RGBColor.WHITE);
 				//glFont.blitString(fb, , 5, fb.getHeight()-10, 10, RGBColor.WHITE);
 				
@@ -202,7 +204,7 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
 				Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
 				Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
-			}
+			} //---- res[1] = null
 			
 			Logger.log(touchedObject.getName());
 			return true;

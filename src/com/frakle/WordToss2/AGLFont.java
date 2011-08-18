@@ -1,4 +1,6 @@
 package com.frakle.WordToss2;
+import java.util.Stack;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -201,6 +203,29 @@ public class AGLFont {
 			if (index != -1) {
 				Point size = pack.blit(buffer, index, x, y, transparency, false, color);
 				x += size.x;
+			}
+		}
+	}
+	
+	public void blitString(FrameBuffer buffer, String s, Stack<Character> found, int x, int y, int transparency, RGBColor color, RGBColor colorAlt) {
+		y -= baseline;
+		Stack<Character> t = (Stack<Character>) found.clone();
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			int index = alphabet.indexOf(c);
+			if (index == -1)
+				index = alphabet.indexOf('?');
+			if (index != -1) {
+				if(t.contains(c)){
+					t.removeElementAt(t.indexOf(c));
+					Point size = pack.blit(buffer, index, x, y, transparency, false, colorAlt);
+					x += size.x;
+				}else{
+					Point size = pack.blit(buffer, index, x, y, transparency, false, color);
+					x += size.x;
+				}
+				
 			}
 		}
 	}

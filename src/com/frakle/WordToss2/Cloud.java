@@ -134,12 +134,12 @@ public class Cloud {
 
     public void addLetter(int num, World world){
     	letters[num] = genLetter(num);
-		world.addObject(letters[num]);
+    	world.addObject(letters[num]);
     }
     
     public void addLetter(int num, World world, String aLetter){
     	letters[num] = genLetter(num, aLetter);
-		world.addObject(letters[num]);
+    	world.addObject(letters[num]);
     }
     
     public void removeLetter(String letterName, World world){
