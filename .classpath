@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/home/mspellecacy/dev/jpct-ae/lib/jpct_ae.jar"/>
+	<classpathentry kind="lib" path="lib/jpct_ae.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -10,7 +10,6 @@ import android.opengl.GLSurfaceView;
 
 import android.graphics.Paint;
 
-import java.util.Random;
 import java.util.Arrays;
 
 import com.threed.jpct.FrameBuffer;
