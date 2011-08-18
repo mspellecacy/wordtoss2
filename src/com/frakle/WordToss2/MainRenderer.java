@@ -11,6 +11,7 @@ import android.opengl.GLSurfaceView;
 import android.graphics.Paint;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Interact2D;
@@ -160,19 +161,41 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 	}
 
 	public boolean objectTouched(float xpos, float ypos) {
+		Random rand = new Random();
 		SimpleVector dir=Interact2D.reproject2D3DWS(world.getCamera(), fb, (int) xpos, (int) ypos).normalize();
 		Object[] res=world.calcMinDistanceAndObject3D(world.getCamera().getPosition(), dir, 10000);
-		
+		boolean NEED_SPECIFIC_LETTER = false;
 		if(res[1] != null){
 			Logger.log(Arrays.toString(wl.wordsStack.toArray()));
 			Object3D touchedObject = (Object3D) res[1];
+			Logger.log(Arrays.toString(cloud.currentLetters().toArray()));
 			
 			if(wl.checkLetter(touchedObject.getName().charAt(0))){
 				Logger.log("LETTER CORRECT: "+ touchedObject.getName().charAt(0));
 				
-				cloud.replaceLetter(touchedObject.getName(),world);
-				//
+				cloud.removeLetter(touchedObject.getName(), world);
+				//named break... AWESOME POSSUM!
+				search:
+					for(int i = 0;i<wl.lettersRemainingStack.size();i++){
+						if( cloud.currentLetters().contains(wl.lettersRemainingStack.elementAt(i))){
+							break search;
+						}else{
+							NEED_SPECIFIC_LETTER = true;
+						}
+	
+					}
+				//LULZ - I know this is kinda gross, at least it looks like it to me...
+				//If there is a better way I'm all ears. 
+				if(NEED_SPECIFIC_LETTER){
+					cloud.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
+							Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
+					//NEED_SPECIFIC_LETTER = false;
+				} else {
+					cloud.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+				}
+				
 				if(wl.lettersRemainingStack.empty()){
+					
 					wl.restack();
 				}
 			} else {

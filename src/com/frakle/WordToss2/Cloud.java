@@ -1,6 +1,7 @@
 package com.frakle.WordToss2;
 
 import java.util.Random;
+import java.util.Stack;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -36,6 +37,8 @@ public class Cloud {
 		for(int i = 0;i<letters.length;i++){
 			letters[i] = genLetter(i);
 		}
+		
+
 		
 	}
 	
@@ -119,9 +122,23 @@ public class Cloud {
     	//replaceLetter(letterName, world);
     	return true;
     }
+    
+    public Stack<Character> currentLetters(){
+    	Stack<Character> toReturn = new Stack<Character>();
+    	
+    	for(int i =0;i<this.letters.length;i++){
+    		toReturn.add(letters[i].getName().charAt(0));
+    	}
+    	return toReturn;
+    }
 
     public void addLetter(int num, World world){
     	letters[num] = genLetter(num);
+		world.addObject(letters[num]);
+    }
+    
+    public void addLetter(int num, World world, String aLetter){
+    	letters[num] = genLetter(num, aLetter);
 		world.addObject(letters[num]);
     }
     
