@@ -37,9 +37,6 @@ public class Cloud {
 		for(int i = 0;i<letters.length;i++){
 			letters[i] = genLetter(i);
 		}
-		
-
-		
 	}
 	
 	//Returns an float[x,y,z] somewhere on the outer edge of an imaginary sphere
@@ -95,6 +92,7 @@ public class Cloud {
     	thisLetter.setName(thisName);
     	thisLetter.setTransparencyMode(Object3D.TRANSPARENCY_MODE_DEFAULT);
     	thisLetter.setTransparency(100);
+    	thisLetter.align(cloud);
     	thisLetter.setOrigin(new SimpleVector(generateVector()));
     	thisLetter.setBillboarding(true);
     	thisLetter.setCollisionMode(Object3D.COLLISION_CHECK_OTHERS);
@@ -108,14 +106,48 @@ public class Cloud {
     	return genLetter(nameNumber, null);
     }
     
-    public void newCloud(){
+    public void newCloud(World world){
+    	
+    	//Purge all the letters from the world.
+    	for(int i=0;i<letters.length;i++){
+			world.removeObject(world.getObjectByName(letters[i].getName()));	
+		}
+    	
     	//run through all the letter objects and Remove/Replace them.
 		for(int i = 0;i<letters.length;i++){
 			cloud.removeChild(letters[i]);
 			letters[i] = genLetter(i);
 		}
+		
+		//Add all the letters back in to the world, all fresh new and shiny!
+		world.addObjects(letters);
+		
     	Logger.log("New Cloud!");
     }
+    
+	public void newSeededCloud(World world, Stack<Character> l) {
+		int seedCount = rand.nextInt(l.size()+1);
+		
+    	//Purge all the letters from the world.
+    	for(int i=0;i<letters.length;i++){
+			world.removeObject(world.getObjectByName(letters[i].getName()));	
+		}
+    	
+    	//run through all the remaining letter objects and Remove/Replace them.
+		for(int i = 0;i<letters.length;i++){
+			cloud.removeChild(letters[i]);
+		}
+		
+		//loop over the first X letters giving seeded values
+		for(int i=0;i<seedCount;i++){
+			letters[i] = genLetter(i,""+l.elementAt(rand.nextInt(l.size())));
+		}
+		for(int i=seedCount;i<letters.length;i++){
+			letters[i] = genLetter(i);
+		}
+		//Add all the letters back in to the world, all fresh new and shiny!
+		world.addObjects(letters);
+	}
     
     public boolean letterClicked(String letterName, World world){
     	
@@ -132,6 +164,22 @@ public class Cloud {
     	return toReturn;
     }
 
+    public boolean containsAny(Stack<Character> toFind){
+    	
+    	search:
+			for(int i = 0;i<toFind.size();i++){
+				if( currentLetters().contains(toFind.elementAt(i))){
+					break search;
+				}else{
+					return false;
+				}
+
+			}
+    	
+		return true;
+    	
+    }
+    
     public void addLetter(int num, World world){
     	letters[num] = genLetter(num);
     	world.addObject(letters[num]);
@@ -155,4 +203,11 @@ public class Cloud {
 		addLetter(num, world);
 		
 	}
+
+	public void shuffleLetters() {
+    	for(int i=0;i<letters.length;i++){
+    		letters[i].setOrigin(new SimpleVector(generateVector()));
+		}	
+	}
+
 }

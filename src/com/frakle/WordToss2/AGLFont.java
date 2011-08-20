@@ -209,6 +209,7 @@ public class AGLFont {
 	
 	public void blitString(FrameBuffer buffer, String s, Stack<Character> found, int x, int y, int transparency, RGBColor color, RGBColor colorAlt) {
 		y -= baseline;
+
 		Stack<Character> t = (Stack<Character>) found.clone();
 
 		for (int i = 0; i < s.length(); i++) {

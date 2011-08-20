@@ -26,10 +26,10 @@ import com.threed.jpct.util.MemoryHelper;
 
 
 public class MainRenderer implements GLSurfaceView.Renderer{
-
+	
 	private MainRenderer master = null;
 	private FrameBuffer fb = null;
-	private World world = null;
+	public World world = null;
 	private RGBColor back = new RGBColor(10, 10, 100);
 	private Light sun = null;
 	private AGLFont buttonFont;
@@ -43,9 +43,8 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 	public char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	public float touchTurn = 0;
 	public float touchTurnUp = 0;
-	public Cloud cloud = new Cloud();
-	public WordList wl = new WordList();
-
+	public Cloud c;
+	public WordList wl;
 
 	public MainRenderer() {
 	}
@@ -60,17 +59,12 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 			if (!stop) {
 				
 				if(NEW_CLOUD){
-					
-					for(int i=0;i<cloud.letters.length;i++){
-						world.removeObject(world.getObjectByName(cloud.letters[i].getName()));	
-					}
-					cloud.newCloud();
-					world.addObjects(cloud.letters);
+					c.newCloud(world);
 					NEW_CLOUD = false;
 				}
 				
 				//Rotate the main cloud body
-				cloud.rotate(touchTurnUp, touchTurn);
+				c.rotate(touchTurnUp, touchTurn);
 				
 				//Purge the old values
 				if(touchTurn != 0)
@@ -91,7 +85,7 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				
 				// FPS counter for debug...
 				buttonFont.blitString(fb, "fps: "+lfps, 10, 40, 10, RGBColor.WHITE);
-				wlFont.blitString(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-300, fb.getHeight()-300, 10, RGBColor.RED,RGBColor.GREEN);
+				wlFont.blitString(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-(fb.getWidth()/3), fb.getHeight()-(fb.getHeight()/2), 10, RGBColor.RED,RGBColor.GREEN);
 				//buttonFont.blitString(fb, "fps: "+lfps, fb.getWidth()-30, 40, 10, RGBColor.WHITE);
 				//glFont.blitString(fb, , 5, fb.getHeight()-10, 10, RGBColor.WHITE);
 				
@@ -124,13 +118,14 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 		if (master == null) {
 			world = new World();
 			world.setAmbientLight(20, 20, 20);
-			
+			world.setFogging(0);
+			world.setFogParameters(1000, 255, 255, 0);
 			sun = new Light(world);
 			sun.setIntensity(250, 250, 250);
 			//add letters
 			
 			try{
-				world.addObjects(cloud.letters);
+				world.addObjects(c.letters);
 			}catch(Exception e){Logger.log(e.toString());}
 			
 			Paint paint = new Paint();
@@ -143,7 +138,9 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 			Camera cam = world.getCamera();
 			cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
 			cam.lookAt(new SimpleVector(30,0,0));
-
+			//start with a usable cloud (even though we already constructed one... when initially creating it...but that might be bad
+			c.newSeededCloud(world,wl.lettersRemainingStack);
+			
 			SimpleVector sv = new SimpleVector();
 			sv.set(0f,0f,0f);
 			sv.y -= 100;
@@ -170,16 +167,16 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 		if(res[1] != null){
 			Logger.log(Arrays.toString(wl.wordsStack.toArray()));
 			Object3D touchedObject = (Object3D) res[1];
-			Logger.log(Arrays.toString(cloud.currentLetters().toArray()));
+			Logger.log(Arrays.toString(c.currentLetters().toArray()));
 			
 			if(wl.checkLetter(touchedObject.getName().charAt(0))){
 				Logger.log("LETTER CORRECT: "+ touchedObject.getName().charAt(0));
 				
-				cloud.removeLetter(touchedObject.getName(), world);
+				c.removeLetter(touchedObject.getName(), world);
 				//named break... AWESOME POSSUM!
 				search:
 					for(int i = 0;i<wl.lettersRemainingStack.size();i++){
-						if( cloud.currentLetters().contains(wl.lettersRemainingStack.elementAt(i))){
+						if( c.currentLetters().contains(wl.lettersRemainingStack.elementAt(i))){
 							break search;
 						}else{
 							NEED_SPECIFIC_LETTER = true;
@@ -189,16 +186,19 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				//LULZ - I know this is kinda gross, at least it looks like it to me...
 				//If there is a better way I'm all ears. 
 				if(NEED_SPECIFIC_LETTER){
-					cloud.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
+					c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
 							Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
 					//NEED_SPECIFIC_LETTER = false;
 				} else {
-					cloud.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+					c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
 				}
 				
 				if(wl.lettersRemainingStack.empty()){
-					
 					wl.restack();
+					if(!c.containsAny(wl.lettersRemainingStack)){
+						c.newSeededCloud(world,wl.lettersRemainingStack);
+					}
+					
 				}
 			} else {
 				Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));

@@ -32,7 +32,7 @@ public class WordList {
 		}
 		
 		//Since we're constructing so they haven't found any letters yet...
-		lettersRemainingStack = currentWordStack;
+		lettersRemainingStack = (Stack<Character>) currentWordStack.clone();
 		
 		//Generate a list of words to follow...
 		for(int i = 0;i<WORD_COUNT;i++){
@@ -42,15 +42,17 @@ public class WordList {
 	
 	public boolean restack(){
 		Logger.log("Restacking");
-		
+		Logger.log("wordsStack1: "+Arrays.toString(wordsStack.toArray()));
+		// push a new word on to the words stack...
+		wordsStack.add(fullList[rand.nextInt(fullList.length)]);
+		Logger.log("wordsStack1: "+Arrays.toString(wordsStack.toArray()));
 		// pop the next word off the stack...
-		currentWord = wordsStack.pop();
+		currentWord = wordsStack.firstElement();
+		wordsStack.remove(0);
 		
+		Logger.log("wordsStack1: "+Arrays.toString(wordsStack.toArray()));
 		// clear the current word
 		currentWordStack.clear();
-		
-		// push a new word on to the words stack...
-		wordsStack.push(fullList[rand.nextInt(fullList.length)]);
 		
 		//refill currentWordStack
 		for(int i = 0;i<currentWord.length();i++){
@@ -61,7 +63,7 @@ public class WordList {
 		lettersFoundStack.clear();
 		
 		//copy currentWordStack in to lettersRemainingStack
-		lettersRemainingStack = currentWordStack;
+		lettersRemainingStack = (Stack<Character>) currentWordStack.clone();
 		
 		return true;
 	}

@@ -1,6 +1,8 @@
 package com.frakle.WordToss2;
 
-import java.io.InputStream;
+import com.frakle.WordToss2.Cloud;
+import com.frakle.WordToss2.WordList;
+
 import java.lang.reflect.Field;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -13,8 +15,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+
 
 import com.threed.jpct.Logger;
 
@@ -23,7 +27,11 @@ public class Wordtoss2Activity extends Activity {
  
 	private static Wordtoss2Activity master = null;
 	private GLSurfaceView mGLView;
+	private ListView wlView;
+	private ArrayAdapter<String> wlAdapter;
 	private MainRenderer renderer = null;
+	private Cloud cloud = new Cloud();
+	private WordList wordList = new WordList();
 	private float xpos = -1;
 	private float ypos = -1;
 	
@@ -37,11 +45,12 @@ public class Wordtoss2Activity extends Activity {
 		}
 
 		super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		mGLView = new GLSurfaceView(getApplication());
-        
+		
+		setContentView(R.layout.main);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        //WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		mGLView = (GLSurfaceView) findViewById(R.id.cloudView);
 		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
 			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
 				// Ensure that we get a 16bit framebuffer. Otherwise, we'll fall
@@ -54,9 +63,17 @@ public class Wordtoss2Activity extends Activity {
 			}
 		});
 
+		
 		renderer = new MainRenderer();
+		renderer.c = cloud;
+		renderer.wl = wordList;
 		mGLView.setRenderer(renderer);
-		setContentView(mGLView);
+		wlView = (ListView) findViewById(R.id.wordListView);
+		wlAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,wordList.wordsStack);
+		wlView.setAdapter(wlAdapter);
+		//wlAdapter.
+		//addContentView(wlView, new LayoutParams(100,100));
+		//setContentView(mGLView);
 	}
 
 	@Override
@@ -116,8 +133,8 @@ public class Wordtoss2Activity extends Activity {
 				xpos = me.getX();
 				ypos = me.getY();
 	
-				renderer.touchTurn = xd / -100f;
-				renderer.touchTurnUp = yd / -100f;
+				cloud.rotate(yd / -100f,xd / -100f);
+				//renderer.touchTurnUp = ;
 				return true;
 			}
 		}
@@ -134,6 +151,7 @@ public class Wordtoss2Activity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    menu.add(0, 0, 0,"New Cloud");	    
+	    menu.add(0,1,0,"Shuffle");
 	    return true;
 	}
     
@@ -141,9 +159,12 @@ public class Wordtoss2Activity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 		    case 0:
-		        renderer.NEW_CLOUD = true;
+		        cloud.newSeededCloud(renderer.world, wordList.lettersRemainingStack);
 		        Logger.log(renderer.wl.toString());
 		        return true;
+		    case 1:
+		    	cloud.shuffleLetters();
+		    	return true;
 	    }
 	    return true;
 	}
