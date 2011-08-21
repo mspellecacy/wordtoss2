@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView;
 
 import android.graphics.Paint;
+import android.graphics.Typeface;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -85,7 +86,7 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				
 				// FPS counter for debug...
 				buttonFont.blitString(fb, "fps: "+lfps, 10, 40, 10, RGBColor.WHITE);
-				wlFont.blitString(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-(fb.getWidth()/3), fb.getHeight()-(fb.getHeight()/2), 10, RGBColor.RED,RGBColor.GREEN);
+				wlFont.blitStringReverse(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-60, 120, 10, RGBColor.RED,RGBColor.GREEN);
 				//buttonFont.blitString(fb, "fps: "+lfps, fb.getWidth()-30, 40, 10, RGBColor.WHITE);
 				//glFont.blitString(fb, , 5, fb.getHeight()-10, 10, RGBColor.WHITE);
 				
@@ -125,11 +126,14 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 			//add letters
 			
 			try{
+				world.addObject(c.cloud);
 				world.addObjects(c.letters);
 			}catch(Exception e){Logger.log(e.toString());}
 			
 			Paint paint = new Paint();
 			paint.setAntiAlias(true);
+
+			paint.setTypeface(Typeface.create(Typeface.MONOSPACE,0));
 			
 			paint.setTextSize(50);
 			buttonFont = new AGLFont(paint);
@@ -139,7 +143,7 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 			cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
 			cam.lookAt(new SimpleVector(30,0,0));
 			//start with a usable cloud (even though we already constructed one... when initially creating it...but that might be bad
-			c.newSeededCloud(world,wl.lettersRemainingStack);
+			c.newSeededCloud(world,wl.currentWordStack);
 			
 			SimpleVector sv = new SimpleVector();
 			sv.set(0f,0f,0f);
@@ -195,9 +199,9 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				
 				if(wl.lettersRemainingStack.empty()){
 					wl.restack();
-					if(!c.containsAny(wl.lettersRemainingStack)){
-						c.newSeededCloud(world,wl.lettersRemainingStack);
-					}
+					//if(!c.containsAny(wl.lettersRemainingStack)){
+						c.newSeededCloud(world,wl.currentWordStack);
+					//}
 					
 				}
 			} else {

@@ -10,6 +10,7 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.FontMetricsInt;
 
 import com.threed.jpct.FrameBuffer;
+import com.threed.jpct.Logger;
 import com.threed.jpct.RGBColor;
 
 /**
@@ -226,7 +227,33 @@ public class AGLFont {
 					Point size = pack.blit(buffer, index, x, y, transparency, false, color);
 					x += size.x;
 				}
-				
+			}
+		}
+	}
+	
+	public void blitStringReverse(FrameBuffer buffer, String s, Stack<Character> found, int x, int y, int transparency, RGBColor color, RGBColor colorAlt) {
+		y -= baseline;
+
+		Stack<Character> t = (Stack<Character>) found.clone();
+
+		for (int i = (s.length() - 1); i >= 0; i--) {
+			//Logger.log(""+i);
+			char c = s.charAt(i);
+			if (c == 'I'){
+				//x += 4;
+			}
+			int index = alphabet.indexOf(c);
+			if (index == -1)
+				index = alphabet.indexOf('?');
+			if (index != -1) {
+				if(t.contains(c)){
+					t.removeElementAt(t.indexOf(c));
+					Point size = pack.blit(buffer, index, x, y, transparency, false, colorAlt);
+					x -= size.x;
+				}else{
+					Point size = pack.blit(buffer, index, x, y, transparency, false, color);
+					x -= size.x;
+				}
 			}
 		}
 	}

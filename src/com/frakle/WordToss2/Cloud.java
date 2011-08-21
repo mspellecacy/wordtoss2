@@ -3,13 +3,18 @@ package com.frakle.WordToss2;
 import java.util.Random;
 import java.util.Stack;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
+import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
+import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 
@@ -22,13 +27,36 @@ public class Cloud {
 	char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	
 	public Cloud(){
-		cloud = Object3D.createDummyObj();
+		/*
+		Bitmap.Config config = Bitmap.Config.ARGB_8888; 
+
+		Paint cPaint = new Paint(); 
+		cPaint.setColor(Color.BLACK);
+		
+		Bitmap charImage = Bitmap.createBitmap(10, 10, config);
+		Canvas canvas = new Canvas(charImage);
+		
+		canvas.drawColor(Color.BLACK);
+		*/
+		TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
+		
+		cloud = Primitives.getSphere(25);
+		cloud.setCollisionMode(Object3D.COLLISION_CHECK_OTHERS);
+		cloud.setTransparencyMode(Object3D.TRANSPARENCY_MODE_DEFAULT);
+		cloud.setTransparency(65);
+		cloud.setTexture("cTexture");
+    	cloud.strip();
+    	cloud.build();
 		letters = new Object3D[15];
 		
 		Paint paint = new Paint();
-		paint.setTypeface(Typeface.create((String)null, Typeface.BOLD));
-		
+		paint.setColor(Color.BLACK);
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setTextSize(50);
+		paint.setTypeface(Typeface.create(Typeface.MONOSPACE,0));
+		//paint.setARGB(0,255,255,0);
+		
+
 		for(int i = 0;i<alphabet.length;i++){
 			if(!TextureManager.getInstance().containsTexture(""+alphabet[i]))
 				TextureManager.getInstance().addTexture(""+alphabet[i], new AGLFont(paint,alphabet[i]+"").pack.getTexture());
@@ -126,21 +154,22 @@ public class Cloud {
     }
     
 	public void newSeededCloud(World world, Stack<Character> l) {
-		int seedCount = rand.nextInt(l.size()+1);
+		//int seedCount = rand.nextInt(l.size()+1);
+		int seedCount = l.size();
 		
-    	//Purge all the letters from the world.
+    	//Purge all the letters from the world object
     	for(int i=0;i<letters.length;i++){
 			world.removeObject(world.getObjectByName(letters[i].getName()));	
 		}
     	
-    	//run through all the remaining letter objects and Remove/Replace them.
+    	//run through all the remaining letter objects in the cloud and Remove/Replace them.
 		for(int i = 0;i<letters.length;i++){
 			cloud.removeChild(letters[i]);
 		}
 		
 		//loop over the first X letters giving seeded values
 		for(int i=0;i<seedCount;i++){
-			letters[i] = genLetter(i,""+l.elementAt(rand.nextInt(l.size())));
+			letters[i] = genLetter(i,""+l.elementAt(i));
 		}
 		for(int i=seedCount;i<letters.length;i++){
 			letters[i] = genLetter(i);

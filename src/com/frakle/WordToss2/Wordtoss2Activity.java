@@ -4,6 +4,7 @@ import com.frakle.WordToss2.Cloud;
 import com.frakle.WordToss2.WordList;
 
 import java.lang.reflect.Field;
+import java.util.Stack;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 
@@ -26,9 +28,10 @@ public class Wordtoss2Activity extends Activity {
     /** Called when the activity is first created. */
  
 	private static Wordtoss2Activity master = null;
+	private static ArrayAdapter<String> wlAdapter;
+	
 	private GLSurfaceView mGLView;
 	private ListView wlView;
-	private ArrayAdapter<String> wlAdapter;
 	private MainRenderer renderer = null;
 	private Cloud cloud = new Cloud();
 	private WordList wordList = new WordList();
@@ -63,14 +66,20 @@ public class Wordtoss2Activity extends Activity {
 			}
 		});
 
-		
+		//setup renderer/cloud
 		renderer = new MainRenderer();
 		renderer.c = cloud;
 		renderer.wl = wordList;
 		mGLView.setRenderer(renderer);
+		
+		//setup wordList
 		wlView = (ListView) findViewById(R.id.wordListView);
 		wlAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,wordList.wordsStack);
+		//wlView.layout();
 		wlView.setAdapter(wlAdapter);
+		wlView.setFocusable(false);
+		wlView.setItemsCanFocus(false);
+
 		//wlAdapter.
 		//addContentView(wlView, new LayoutParams(100,100));
 		//setContentView(mGLView);
@@ -159,7 +168,7 @@ public class Wordtoss2Activity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 		    case 0:
-		        cloud.newSeededCloud(renderer.world, wordList.lettersRemainingStack);
+		        cloud.newSeededCloud(renderer.world, wordList.currentWordStack);
 		        Logger.log(renderer.wl.toString());
 		        return true;
 		    case 1:
@@ -168,6 +177,11 @@ public class Wordtoss2Activity extends Activity {
 	    }
 	    return true;
 	}
+	
+	public static void updateWordList() {
+		wlAdapter.notifyDataSetChanged();
+	}
+	
 	protected boolean isFullscreenOpaque() {
 		return true;
 	}

@@ -10,16 +10,23 @@
 		android:focusableInTouchMode="true"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_alignParentTop="true" android:keepScreenOn="true"/>
-	<ListView
-		android:id="@+id/wordListView" 
-		android:background="#00000000"
-		android:cacheColorHint="#00000000"
-		android:layout_alignParentRight="true" 
-		android:textColor="@android:color/transparent"
-		android:layout_width="100dp" 
-		android:layout_height="fill_parent" 
-		android:focusable="false" 
-		android:stackFromBottom="true"
-		android:drawable="@android:color/transparent"></ListView>
-
+		<RelativeLayout 
+			android:layout_width="wrap_content" 
+			android:id="@+id/mainView"
+			android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="bottom|right">
+			<ListView
+				android:id="@+id/wordListView" 
+				android:background="#00000000"
+				android:cacheColorHint="#00000000"
+				android:layout_alignParentRight="true" 
+				android:layout_alignParentBottom="true"
+				android:textColor="@android:color/transparent"
+				android:layout_width="200dp" 
+				android:layout_height="500dp"
+				android:focusable="false" 
+				android:stackFromBottom="false"
+				android:drawable="@android:color/transparent" 
+				android:focusableInTouchMode="false">
+				</ListView>
+	</RelativeLayout>
 </RelativeLayout>
