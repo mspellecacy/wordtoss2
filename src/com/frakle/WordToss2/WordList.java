@@ -65,7 +65,7 @@ public class WordList {
 		//copy currentWordStack in to lettersRemainingStack
 		lettersRemainingStack = (Stack<Character>) currentWordStack.clone();
 		
-		Wordtoss2Activity.updateWordList();
+		Wordtoss2Game.updateWordList();
 		return true;
 	}
 	public boolean checkLetter(char letter){

@@ -22,7 +22,7 @@
 				android:layout_alignParentBottom="true"
 				android:textColor="@android:color/transparent"
 				android:layout_width="200dp" 
-				android:layout_height="500dp"
+				android:layout_height="200dp"
 				android:focusable="false" 
 				android:stackFromBottom="false"
 				android:drawable="@android:color/transparent" 
