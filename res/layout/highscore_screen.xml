@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:gravity="center" android:id="@+id/highscore_alert"
+	android:orientation="horizontal" android:layout_width="wrap_content"
+	android:layout_height="wrap_content" android:weightSum="1"
+	android:layout_centerHorizontal="true">
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="Game Type"
+		android:id="@+id/gameTypeTitle" android:gravity="center" android:layout_centerHorizontal="true" android:textSize="24dp"></TextView>
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:gravity="center" android:id="@+id/highscoreAlertTL"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:weightSum="1"
+		android:layout_centerHorizontal="true" android:layout_centerInParent="false"
+		android:paddingLeft="20dp" android:layout_below="@id/gameTypeTitle">
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/highscore_tr">
+			<TextView android:id="@+id/highscore_list_rank"
+				android:text="#" android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_alignParentTop="true" android:layout_column="1"
+				android:layout_weight="0.04" />
+			<TextView android:id="@+id/highscore_list_name"
+				android:text="Name" android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_alignParentTop="true" android:layout_toRightOf="@id/highscore_list_rank"
+				android:layout_column="2" android:layout_weight="0.32" />
+			<TextView android:id="@+id/highscore_list_score"
+				android:text="Score" android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_alignParentTop="true" android:layout_toRightOf="@id/highscore_list_name"
+				android:layout_column="3" android:layout_weight="0.32" />
+			<TextView android:id="@+id/highscore_list_date"
+				android:text="Date" android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_alignParentTop="true" android:layout_toRightOf="@id/highscore_list_score"
+				android:layout_column="4" android:layout_weight="0.32" />
+		</TableRow>
+	</TableLayout>
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_centerHorizontal="true" android:id="@+id/highscore_entry"
+		android:orientation="horizontal" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@id/highscoreAlertTL">
+		<EditText android:id="@+id/txt_name" android:hint="Enter Name"
+			android:layout_height="wrap_content" android:layout_width="200px"
+			android:singleLine="true" />
+
+		<Button android:id="@+id/save_button" android:text="Save"
+			android:layout_centerHorizontal="true" android:layout_toRightOf="@id/txt_name"
+			android:layout_width="100px" android:layout_alignBaseline="@id/txt_name"
+			android:layout_height="46dp" android:layout_weight="0.66"
+			android:onClick="saveHighscore" />
+	</RelativeLayout>
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_centerHorizontal="true" android:id="@+id/highscore_buttons"
+		android:orientation="horizontal" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@id/highscore_entry">
+		<Button android:id="@+id/close_button" android:text="Close Window"
+			android:layout_centerHorizontal="true" android:layout_width="300px"
+			android:layout_height="40dp" android:onClick="closeHighscore" />
+	</RelativeLayout>
+
+</RelativeLayout>
