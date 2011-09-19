@@ -41,6 +41,7 @@ public class Cloud {
 		TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
 		
 		cloud = Primitives.getSphere(25);
+		//cloud = Primitives.getBox(25,1);
 		cloud.setCollisionMode(Object3D.COLLISION_CHECK_OTHERS);
 		cloud.setTransparencyMode(Object3D.TRANSPARENCY_MODE_DEFAULT);
 		cloud.setTransparency(65);

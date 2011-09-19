@@ -10,6 +10,9 @@ import android.opengl.GLSurfaceView;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -18,6 +21,7 @@ import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Interact2D;
 import com.threed.jpct.Light;
 import com.threed.jpct.Object3D;
+import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.World;
 import com.threed.jpct.Camera;
@@ -26,7 +30,7 @@ import com.threed.jpct.SimpleVector;
 import com.threed.jpct.util.MemoryHelper;
 
 
-public class MainRenderer implements GLSurfaceView.Renderer{
+public class MainRenderer implements GLSurfaceView.Renderer {
 
 	private MainRenderer master = null;
 	private FrameBuffer fb = null;
@@ -38,17 +42,22 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 	private AGLFont scoreFont;
 	private long time = System.currentTimeMillis();
 	private boolean stop = false;
+	private float curY = 0f;
 	private int lfps = 0;
 	private int fps = 0;
 	private boolean FIRST_RUN = true;
 	private String timeDisplay;
 	private long LAST_STACK = System.currentTimeMillis();;
+	//private Camera cam;
+
 	public boolean NEW_CLOUD = false;
 	public char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	public float touchTurn = 0;
 	public float touchTurnUp = 0;
 	public Cloud c;
 	public WordList wl;
+	//private float[] rotationMatrix;
+	
 
 	public MainRenderer() {
 	}
@@ -61,12 +70,13 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 	public void onDrawFrame(GL10 gl) {
 		try {
 			if (!stop) {
-
+			
+				
 				if(NEW_CLOUD){
 					c.newCloud(world);
 					NEW_CLOUD = false;
 				}
-
+				
 				//Rotate the main cloud body
 				c.rotate(touchTurnUp, touchTurn);
 
@@ -76,13 +86,58 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 				if(touchTurnUp != 0)
 					touchTurnUp = 0;
 
-				if(world == null){
-					world = new World();
-					world.setAmbientLight(20, 20, 20);
+				//if(world == null){
+				//	world = new World();
+				//	world.setAmbientLight(20, 20, 20);
+				//}
+				
+				// * Test Code
+				
+				//Logger.log(Arrays.toString(Wordtoss2Game.rotationMatrix));
+				//Logger.log(Arrays.toString(Wordtoss2Game.orientationData));
+				/*
+				Camera cam = world.getCamera();
+				SimpleVector camVec = new SimpleVector();
+				cam.getDirection(camVec);
+				//camVec.set(camVec.x,camVec.y, camVec.z);
+				Logger.log(curY+"");
+				if( Wordtoss2Game.orientationData[1] < 0){
+					if(curY < 0.05f){
+						cam.rotateCameraY(0.005f);
+						curY += 0.002f;
+						//cam.lookAt(new SimpleVector(camVec.x+30,camVec.y+0.2f, camVec.z));
+					}
 				}
-
+				
+				if( Wordtoss2Game.orientationData[1] > 0){
+					if(curY > -0.05f){
+						cam.rotateCameraY(-0.005f);
+						//cam.lookAt(new SimpleVector(camVec.x+30,camVec.y-0.2f, camVec.z));
+						curY += -0.002f;
+						
+					}
+				}
+				*/
+				//cam.getDirection(toFill)
+				//cam.rotateCameraX(Wordtoss2Game.orientationData[0]);
+				//float[] rotResult = new float[9];
+				//Logger.log(Arrays.toString(Wordtoss2Game.rotationMatrix));
+				//SensorManager.remapCoordinateSystem(
+				//		Wordtoss2Game.rotationMatrix, SensorManager.AXIS_MINUS_Y,
+				//		SensorManager.AXIS_MINUS_X, rotResult);
+				//com.threed.jpct.Matrix mResult = new com.threed.jpct.Matrix();
+				//copyMatrix(rotResult, mResult);
+				
+				//cam.setBack(mResult);
+				//cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
+				
+				//cam.lookAt(new SimpleVector(30,0,0));
+				//SimpleVector camPos = new SimpleVector();
+				//cam.getPosition(camPos);
+				//Logger.log(camPos.x+","+camPos.y+","+camPos.z);
+				
 				//Render
-				fb.clear(back);
+				fb.clear();
 				world.renderScene(fb);
 				world.draw(fb);
 
@@ -92,18 +147,15 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 					timeDisplay = "Press to Start";
 				}
 
-				// FPS counter for debug...
+				// On Screen FPS counter for debug...
 				//buttonFont.blitString(fb, "fps: "+lfps, 10, 40, 10, RGBColor.WHITE);
 				timerFont.blitString(fb, "Time: "+timeDisplay, 10, 40, 10, RGBColor.WHITE);
 				scoreFont.blitString(fb, "Score: "+Wordtoss2Game.CURRENT_SCORE, 10, fb.getHeight()-10, 10, RGBColor.WHITE);
 				wlFont.blitStringReverse(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-60, 120, 10, RGBColor.RED, RGBColor.GREEN);
-				//buttonFont.blitString(fb, "fps: "+lfps, fb.getWidth()-30, 40, 10, RGBColor.WHITE);
-				//glFont.blitString(fb, , 5, fb.getHeight()-10, 10, RGBColor.WHITE);
-
 				fb.display();
 				if (System.currentTimeMillis() - time >= 1000) {
 					lfps = (fps + lfps) >> 1;
-					//Logger.log(fps + "fps");
+					Logger.log(fps + "fps");
 					fps = 0;
 					time = System.currentTimeMillis();
 				}
@@ -128,6 +180,7 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 		fb = new FrameBuffer(gl, w, h);
 
 		if (master == null) {
+			
 			world = new World();
 			world.setAmbientLight(20, 20, 20);
 			world.setFogging(0);
@@ -150,10 +203,16 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 			timerFont = new AGLFont(paint);
 			wlFont = new AGLFont(paint);
 			scoreFont = new AGLFont(paint);
-
+			//Object3D spaceBox = Primitives.getBox(300,2);
+			//spaceBox.
+			//spaceBox.strip();
+			//spaceBox.build();
+			//world.addObject(spaceBox);
+			
 			Camera cam = world.getCamera();
 			cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
 			cam.lookAt(new SimpleVector(30,0,0));
+			
 			//start with a usable cloud (even though we already constructed one... when initially creating it...but that might be bad
 			c.newSeededCloud(world,wl.currentWordStack);
 
@@ -233,5 +292,16 @@ public class MainRenderer implements GLSurfaceView.Renderer{
 		}
 		return false;
 	}
+	
+	private void copyMatrix(float[] src, com.threed.jpct.Matrix dest) {
+		dest.setRow(0, src[0], src[1], src[2], 0);    
+		dest.setRow(1, src[3], src[4], src[5], 0);    
+		dest.setRow(2, src[6], src[7], src[8], 0);    
+		dest.setRow(3, 0f, 0f, 0f, 1f);
+	}
 
+	public void setRotationMatrix(float[] matrix){
+		//rotationMatrix = matrix;
+	}
+	
 }

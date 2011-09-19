@@ -1,6 +1,7 @@
 package com.frakle.WordToss2;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -31,17 +32,15 @@ public class HighScoreManager {
 		myDB = dbHelp.getWritableDatabase();
 	}
 
-	public List<String[]> getHighScores(Integer count, String gameType){
-		List<String[]> toReturn = new LinkedList<String[]>();
+	public List<HighScore> getHighScores(Integer count, String gameType){
+		List<HighScore> toReturn = new ArrayList<HighScore>();
 		String WHERE_CLAUSE = KEY_GAMETYPE+"="+"'"+gameType+"'";
 		String ORDER_CLAUSE = KEY_SCORE+" DESC";
-		//Cursor cur = myDB.query(TABLE, new String[] { KEY_ROWID, KEY_NAME, KEY_SCORE, KEY_DATE, KEY_GAMETYPE }, WHERE_CLAUSE, null, null, null, ORDER_CLAUSE, count.toString());
-		Cursor cur = myDB.rawQuery("select _id, name, score, date, game_type from highscore where game_type = \""+gameType+"\" ORDER BY score DESC", null);
+		Cursor cur = myDB.query(TABLE, new String[] { KEY_ROWID, KEY_NAME, KEY_SCORE, KEY_DATE, KEY_GAMETYPE }, WHERE_CLAUSE, null, null, null, ORDER_CLAUSE, count.toString());
+		Logger.log("Filling Score List<HighScore>");
 		cur.moveToFirst();
 		while (cur.isAfterLast() == false) {
-			Logger.log("Filling Score List<String[]>");
-			Logger.log(Arrays.deepToString(new String[] {cur.getString(1),cur.getString(2),cur.getString(3)}));
-			toReturn.add(new String[] {cur.getString(1),cur.getString(2),cur.getString(3)});
+			toReturn.add(new HighScore (cur.getString(1),cur.getString(2),cur.getString(3)));
 			cur.moveToNext();
 		}
 		cur.close();
@@ -55,6 +54,7 @@ public class HighScoreManager {
 		cur.moveToFirst();
 		return cur;
 	}
+	
 	public int findScorePlacement(int curScore, String gameType){
 		
 		return curScore;
@@ -90,9 +90,9 @@ public class HighScoreManager {
 		List<String> game_types = getGameTypes();
 		for(String gType : game_types){
 			Logger.log("DEBUG: Dumping scores for "+gType+" gameType.");
-			List<String[]> scores = getHighScores(10000,gType);
-			for (String[] entry : scores){
-			    Logger.log(Arrays.deepToString(entry));
+			List<HighScore> scores = getHighScores(10000,gType);
+			for (HighScore hs : scores){
+			    Logger.log(hs.getName()+"/"+hs.getScore()+"/"+hs.getDate());
 			}
 		}
 	}

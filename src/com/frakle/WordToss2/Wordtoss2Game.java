@@ -4,6 +4,7 @@ import com.frakle.WordToss2.Cloud;
 import com.frakle.WordToss2.WordList;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -11,8 +12,14 @@ import javax.microedition.khronos.egl.EGLDisplay;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
+import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -25,7 +32,7 @@ import android.widget.ListView;
 import com.threed.jpct.Logger;
 import com.threed.jpct.TextureManager;
 
-public class Wordtoss2Game extends Activity {
+public class Wordtoss2Game extends Activity implements SensorEventListener {
 	/** Called when the activity is first created. */
 	//
 	private static Wordtoss2Game master = null;
@@ -40,6 +47,16 @@ public class Wordtoss2Game extends Activity {
 	private float ypos = -1;
 	private int gameLength;
 	private String gameType;
+	//
+	public static float[] rotationMatrix = new float[16];
+	private float[] accelGData = new float[3];
+	private float[] bufferedAccelGData = new float[3];
+	private float[] magnetData = new float[3];
+	private float[] bufferedMagnetData = new float[3];
+	public static float[] orientationData = new float[3];
+	private SensorManager mSensorManager;
+	private long lastUpdate;
+	//
 	public static int CURRENT_SCORE;
 	public static GameTimer gTimer;
 	public static boolean GAME_RUNNING = false;
@@ -60,12 +77,10 @@ public class Wordtoss2Game extends Activity {
 		CURRENT_SCORE = 0;
 		setContentView(R.layout.main);
 
-
 		Bundle extras = getIntent().getExtras();
 		gameLength = extras.getInt("gameLength");
 		gameType = getGameType(gameLength);
-
-
+		
 		mGLView = (GLSurfaceView) this.findViewById(R.id.cloudView);
 		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
 			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
@@ -94,13 +109,19 @@ public class Wordtoss2Game extends Activity {
 		wlView.setFocusable(false);
 		wlView.setItemsCanFocus(false);
 		//For Testing give us very short games...
-		//gTimer = new GameTimer(5000,1);
+		//gTimer = new GameTimer(29000,1);
 		gTimer = new GameTimer((60000*gameLength),1);
 		GAME_RUNNING=true;
 
-		//wlAdapter.
-		//addContentView(wlView, new LayoutParams(100,100));
-		//setContentView(mGLView);
+		
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		mSensorManager.registerListener(this, 
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
+		mSensorManager.registerListener(this, 
+				mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_GAME);
+		mSensorManager.registerListener(this,
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
+		
 	}
 
 	private String getGameType(int gameLen) {
@@ -301,7 +322,7 @@ public class Wordtoss2Game extends Activity {
 		alert.show();
 		
 		//push them to the highscores page real quick....
-		//displayHighscore();
+		displayHighscore();
 	}
 
 	public class GameTimer extends CountDownTimer{
@@ -332,8 +353,10 @@ public class Wordtoss2Game extends Activity {
 		int wordSpeedBonus = 1000;
 		
 		
-		if(wordLen>7)
+		if(wordLen>7){
 			toAdd += longWordBonus;
+		}
+			
 		
 		if(eTimeSeconds<10)
 			toAdd += wordSpeedBonus;
@@ -342,5 +365,88 @@ public class Wordtoss2Game extends Activity {
 		
 		CURRENT_SCORE = CURRENT_SCORE+toAdd;
 	}
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	}
 
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		final int type = event.sensor.getType();
+		
+		if (type == Sensor.TYPE_ACCELEROMETER) {
+			accelGData = event.values.clone();
+		}
+		if (type == Sensor.TYPE_MAGNETIC_FIELD) {
+			magnetData = event.values.clone();
+		}
+		if (type == Sensor.TYPE_ORIENTATION) {
+			orientationData = event.values.clone();
+		}
+		//Logger.log(Arrays.toString(orientationData));
+		rootMeanSquareBuffer(bufferedAccelGData, accelGData);
+		rootMeanSquareBuffer(bufferedMagnetData, magnetData);
+		SensorManager.getRotationMatrix(rotationMatrix, null,
+				bufferedAccelGData, bufferedMagnetData);
+		
+		//Logger.log(Arrays.toString(rotationMatrix));
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		finish();
+	}
+	
+	private void rootMeanSquareBuffer(float[] target, float[] values) {
+
+		  final float amplification = 200.0f;
+		  float buffer = 20.0f;
+
+		  target[0] += amplification;
+		  target[1] += amplification;
+		  target[2] += amplification;
+		  values[0] += amplification;
+		  values[1] += amplification;
+		  values[2] += amplification;
+
+		  target[0] = (float) (Math
+		    .sqrt((target[0] * target[0] * buffer + values[0] * values[0])
+		      / (1 + buffer)));
+		  target[1] = (float) (Math
+		    .sqrt((target[1] * target[1] * buffer + values[1] * values[1])
+		      / (1 + buffer)));
+		  target[2] = (float) (Math
+		    .sqrt((target[2] * target[2] * buffer + values[2] * values[2])
+		      / (1 + buffer)));
+
+		  target[0] -= amplification;
+		  target[1] -= amplification;
+		  target[2] -= amplification;
+		  values[0] -= amplification;
+		  values[1] -= amplification;
+		  values[2] -= amplification;
+	}
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
