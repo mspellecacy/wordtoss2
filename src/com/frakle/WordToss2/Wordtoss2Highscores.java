@@ -45,10 +45,6 @@ public class Wordtoss2Highscores extends Activity {
 		EditText hsET = (EditText) this.findViewById(R.id.txt_name);
 		TextView hsTV = (TextView) this.findViewById(R.id.gameTypeTitle);
 
-		
-		
-		//hsTV.setText("TITS");
-		//Logger.log(""+hsTV.getText());
 		hsManager = new HighScoreManager(this);
 		hsManager.debugScores();
 		Bundle extras = getIntent().getExtras();
@@ -69,14 +65,12 @@ public class Wordtoss2Highscores extends Activity {
 			saveBt.setVisibility(View.GONE);
 			//Gen gameType buttons so they can see high scores for everything.
 			generateGameTypeButtons();
-			
+
 		} else {
 			hsTV.setText(gameType+" Game High Scores");
 			showScores(gameType);
 		}
-		
 	}
-	
 	
 	private void generateGameTypeButtons() {
 		List<String> mGameTypes = hsManager.getGameTypes();
@@ -90,13 +84,10 @@ public class Wordtoss2Highscores extends Activity {
 				public void onClick(View v) {
 					Logger.log(mGameType);
 					showScores(mGameType);
-					
 				}
-				
 			});
 			hsLL.addView(mGameTypeButton);
 		}
-		
 	}
 
 
@@ -123,7 +114,6 @@ public class Wordtoss2Highscores extends Activity {
 		dLP.weight = 0.32f;
 		dLP.column = 4;
 
-		
 		TableRow headerTR = new TableRow(this);
 		headerTR.setId(001);
 		//rank header.
@@ -201,21 +191,17 @@ public class Wordtoss2Highscores extends Activity {
 		EditText hsET = (EditText) this.findViewById(R.id.txt_name);
 		Button saveBt = (Button) this.findViewById(R.id.save_button);
 		String curName = hsET.getText().toString();
-		
-		if(curName == "")
-			curName = "Anonymous";
-		
+		if(curName == "") { curName = "Anonymous"; }
 		hsET.setVisibility(View.GONE);
 		saveBt.setVisibility(View.GONE);
 		hsManager.addScore(new String[] {curName,Integer.toString(gameScore),gameType});
 		showScores(gameType);
 	}
 	
-
-
 	public void closeHighscore(View view){
 		finish();
 	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();

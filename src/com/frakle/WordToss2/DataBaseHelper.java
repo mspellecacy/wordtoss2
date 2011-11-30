@@ -9,10 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataBaseHelper extends SQLiteOpenHelper{
 
 	private static final String DATABASE_CREATE_HIGHSCORE = "CREATE TABLE highscore (date TEXT, name TEXT, score NUMERIC, game_type TEXT, _id integer primary key autoincrement);";
-	private static final String DATABASE_CREATE_METADATA = "CREATE TABLE android_metadata ('locale' TEXT DEFAULT 'en_US');";
-	private static final String DATABASE_INSERT_METADATA = "INSERT INTO android_metadata VALUES('en_US');";
 	private static String DATABASE_NAME = "pickspell.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	/**
 	 * Constructor
@@ -25,8 +23,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE_METADATA);
-		database.execSQL(DATABASE_INSERT_METADATA);
 		database.execSQL(DATABASE_CREATE_HIGHSCORE);
 	}
 

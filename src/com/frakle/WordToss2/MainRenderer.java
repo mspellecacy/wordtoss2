@@ -58,7 +58,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	public WordList wl;
 	//private float[] rotationMatrix;
 	
-
 	public MainRenderer() {
 	}
 
@@ -70,7 +69,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	public void onDrawFrame(GL10 gl) {
 		try {
 			if (!stop) {
-			
 				
 				if(NEW_CLOUD){
 					c.newCloud(world);
@@ -85,56 +83,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 					touchTurn=0;
 				if(touchTurnUp != 0)
 					touchTurnUp = 0;
-
-				//if(world == null){
-				//	world = new World();
-				//	world.setAmbientLight(20, 20, 20);
-				//}
-				
-				// * Test Code
-				
-				//Logger.log(Arrays.toString(Wordtoss2Game.rotationMatrix));
-				//Logger.log(Arrays.toString(Wordtoss2Game.orientationData));
-				/*
-				Camera cam = world.getCamera();
-				SimpleVector camVec = new SimpleVector();
-				cam.getDirection(camVec);
-				//camVec.set(camVec.x,camVec.y, camVec.z);
-				Logger.log(curY+"");
-				if( Wordtoss2Game.orientationData[1] < 0){
-					if(curY < 0.05f){
-						cam.rotateCameraY(0.005f);
-						curY += 0.002f;
-						//cam.lookAt(new SimpleVector(camVec.x+30,camVec.y+0.2f, camVec.z));
-					}
-				}
-				
-				if( Wordtoss2Game.orientationData[1] > 0){
-					if(curY > -0.05f){
-						cam.rotateCameraY(-0.005f);
-						//cam.lookAt(new SimpleVector(camVec.x+30,camVec.y-0.2f, camVec.z));
-						curY += -0.002f;
-						
-					}
-				}
-				*/
-				//cam.getDirection(toFill)
-				//cam.rotateCameraX(Wordtoss2Game.orientationData[0]);
-				//float[] rotResult = new float[9];
-				//Logger.log(Arrays.toString(Wordtoss2Game.rotationMatrix));
-				//SensorManager.remapCoordinateSystem(
-				//		Wordtoss2Game.rotationMatrix, SensorManager.AXIS_MINUS_Y,
-				//		SensorManager.AXIS_MINUS_X, rotResult);
-				//com.threed.jpct.Matrix mResult = new com.threed.jpct.Matrix();
-				//copyMatrix(rotResult, mResult);
-				
-				//cam.setBack(mResult);
-				//cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
-				
-				//cam.lookAt(new SimpleVector(30,0,0));
-				//SimpleVector camPos = new SimpleVector();
-				//cam.getPosition(camPos);
-				//Logger.log(camPos.x+","+camPos.y+","+camPos.z);
 				
 				//Render
 				fb.clear();
@@ -293,15 +241,9 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 		return false;
 	}
 	
-	private void copyMatrix(float[] src, com.threed.jpct.Matrix dest) {
-		dest.setRow(0, src[0], src[1], src[2], 0);    
-		dest.setRow(1, src[3], src[4], src[5], 0);    
-		dest.setRow(2, src[6], src[7], src[8], 0);    
-		dest.setRow(3, 0f, 0f, 0f, 1f);
-	}
-
 	public void setRotationMatrix(float[] matrix){
 		//rotationMatrix = matrix;
 	}
-	
+
+
 }

@@ -23,6 +23,7 @@ import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -221,6 +222,21 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		return super.onTouchEvent(me);
 	}
 
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			Logger.log("Running Cleanup...");
+			TextureManager.getInstance().flush();
+			gTimer.cancel();
+			GAME_RUNNING = false;
+			
+			renderer.stop();
+			finish();
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -328,6 +344,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	public class GameTimer extends CountDownTimer{
 		public GameTimer(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
+			
 		}
 
 		@Override
