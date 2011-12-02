@@ -37,10 +37,10 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	/** Called when the activity is first created. */
 	//
 	private static Wordtoss2Game master = null;
-	private static ArrayAdapter<String> wlAdapter;
+	//private static ArrayAdapter<String> wlAdapter;
 
 	private GLSurfaceView mGLView;
-	private ListView wlView;
+	//private ListView wlView;
 	private MainRenderer renderer = null;
 	private Cloud cloud = new Cloud();
 	private WordList wordList = new WordList();
@@ -103,12 +103,12 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		mGLView.setRenderer(renderer);
 
 		//setup wordList
-		wlView = (ListView) findViewById(R.id.wordListView);
-		wlAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,wordList.wordsStack);
+		//wlView = (ListView) findViewById(R.id.wordListView);
+		//wlAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,wordList.wordsStack);
 		//wlView.layout();
-		wlView.setAdapter(wlAdapter);
-		wlView.setFocusable(false);
-		wlView.setItemsCanFocus(false);
+		//wlView.setAdapter(wlAdapter);
+		//wlView.setFocusable(false);
+		//wlView.setItemsCanFocus(false);
 		//For Testing give us very short games...
 		//gTimer = new GameTimer(29000,1);
 		gTimer = new GameTimer((60000*gameLength),1);
@@ -275,7 +275,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	}
 
 	public static void updateWordList() {
-		wlAdapter.notifyDataSetChanged();
+		//wlAdapter.notifyDataSetChanged();
 	}
 
 

@@ -40,6 +40,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	private AGLFont timerFont;
 	private AGLFont wlFont;
 	private AGLFont scoreFont;
+	private AGLFont scoreFontTitle;
 	private long time = System.currentTimeMillis();
 	private boolean stop = false;
 	private float curY = 0f;
@@ -88,7 +89,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 				fb.clear();
 				world.renderScene(fb);
 				world.draw(fb);
-
+				//
 				if(!FIRST_RUN){
 					timeDisplay = Wordtoss2Game.getHumanTime();
 				}else{
@@ -98,8 +99,10 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 				// On Screen FPS counter for debug...
 				//buttonFont.blitString(fb, "fps: "+lfps, 10, 40, 10, RGBColor.WHITE);
 				timerFont.blitString(fb, "Time: "+timeDisplay, 10, 40, 10, RGBColor.WHITE);
-				scoreFont.blitString(fb, "Score: "+Wordtoss2Game.CURRENT_SCORE, 10, fb.getHeight()-10, 10, RGBColor.WHITE);
-				wlFont.blitStringReverse(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-60, 120, 10, RGBColor.RED, RGBColor.GREEN);
+				scoreFontTitle.blitString(fb, "Score:", 10, fb.getHeight()-60, 10, RGBColor.WHITE);
+				scoreFont.blitString(fb,""+Wordtoss2Game.CURRENT_SCORE, 10, fb.getHeight()-10, 10, RGBColor.WHITE);
+				//wlFont.blitStringReverse(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-60, 120, 10, RGBColor.RED, RGBColor.GREEN);
+				wlFont.blitStringReverse(fb, wl.currentWord, wl.lettersRemainingStack, fb.getWidth()-60, fb.getHeight()/2, 10, RGBColor.RED, RGBColor.GREEN);
 				fb.display();
 				if (System.currentTimeMillis() - time >= 1000) {
 					lfps = (fps + lfps) >> 1;
@@ -151,6 +154,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 			timerFont = new AGLFont(paint);
 			wlFont = new AGLFont(paint);
 			scoreFont = new AGLFont(paint);
+			scoreFontTitle = new AGLFont(paint);
 			//Object3D spaceBox = Primitives.getBox(300,2);
 			//spaceBox.
 			//spaceBox.strip();
