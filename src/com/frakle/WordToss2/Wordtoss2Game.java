@@ -105,18 +105,21 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		mGLView.setRenderer(renderer);
 
 		//setup wordList
-		//wlView = (ListView) findViewById(R.id.wordListView);
-		//wlAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,wordList.wordsStack);
-		//wlView.layout();
-		//wlView.setAdapter(wlAdapter);
-		//wlView.setFocusable(false);
-		//wlView.setItemsCanFocus(false);
+		/**
+		wlView = (ListView) findViewById(R.id.wordListView);
+		wlAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,wordList.wordsStack);
+		wlView.layout();
+		wlView.setAdapter(wlAdapter);
+		wlView.setFocusable(false);
+		wlView.setItemsCanFocus(false);
+		**/
+		
 		//For Testing give us very short games...
-		//gTimer = new GameTimer(5000,1);
-		gTimer = new GameTimer((60000*gameLength),1);
+		gTimer = new GameTimer(5000,1);
+		//gTimer = new GameTimer((60000*gameLength),1);
 		GAME_RUNNING=true;
 
-		
+		/**
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		mSensorManager.registerListener(this, 
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
@@ -124,12 +127,11 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 				mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_GAME);
 		mSensorManager.registerListener(this,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
-		
+		**/
 		
 		//Setup Sounds...
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
         mSoundManager.initSounds(this);
-        
         mSoundManager.addSound(1, R.raw.letter_hit);
         mSoundManager.addSound(2, R.raw.letter_miss);
         mSoundManager.addSound(3, R.raw.word_complete);
@@ -312,7 +314,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		int[] ints = {hours , mins , secs};
 
 		//Lazy Fix, but whatever.
-		if(ints[2] < 10){
+		if(ints[2] < 10){		 
 			return ""+ints[1]+":0"+ints[2];
 		}else{
 			return ""+ints[1]+":"+ints[2];

@@ -10,9 +10,6 @@ import android.opengl.GLSurfaceView;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -106,7 +103,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 				fb.display();
 				if (System.currentTimeMillis() - time >= 1000) {
 					lfps = (fps + lfps) >> 1;
-					Logger.log(fps + "fps");
+					//Logger.log(fps + "fps");
 					fps = 0;
 					time = System.currentTimeMillis();
 				}
@@ -144,30 +141,24 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 				world.addObject(c.cloud);
 				world.addObjects(c.letters);
 			}catch(Exception e){Logger.log(e.toString());}
-
+			
+			//Setup Paint... we'll use this to make our letters/numbers
 			Paint paint = new Paint();
 			paint.setAntiAlias(true);
-
 			paint.setTypeface(Typeface.create(Typeface.MONOSPACE,0));
-
 			paint.setTextSize(50);
 			timerFont = new AGLFont(paint);
 			wlFont = new AGLFont(paint);
 			scoreFont = new AGLFont(paint);
 			scoreFontTitle = new AGLFont(paint);
-			//Object3D spaceBox = Primitives.getBox(300,2);
-			//spaceBox.
-			//spaceBox.strip();
-			//spaceBox.build();
-			//world.addObject(spaceBox);
 			
+			//Setup our world Camera
 			Camera cam = world.getCamera();
 			cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
 			cam.lookAt(new SimpleVector(30,0,0));
 			
 			//start with a usable cloud (even though we already constructed one... when initially creating it...but that might be bad
 			c.newSeededCloud(world,wl.currentWordStack);
-
 			SimpleVector sv = new SimpleVector();
 			sv.set(0f,0f,0f);
 			sv.y -= 100;
@@ -197,12 +188,12 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 		Object[] res=world.calcMinDistanceAndObject3D(world.getCamera().getPosition(), dir, 10000);
 		boolean NEED_SPECIFIC_LETTER = false;
 		if(res[1] != null){
-			Logger.log(Arrays.toString(wl.wordsStack.toArray()));
+			//Logger.log(Arrays.toString(wl.wordsStack.toArray()));
 			Object3D touchedObject = (Object3D) res[1];
-			Logger.log(Arrays.toString(c.currentLetters().toArray()));
+			//Logger.log(Arrays.toString(c.currentLetters().toArray()));
 
 			if(wl.checkLetter(touchedObject.getName().charAt(0))){
-				Logger.log("LETTER CORRECT: "+ touchedObject.getName().charAt(0));
+				//Logger.log("LETTER CORRECT: "+ touchedObject.getName().charAt(0));
 
 				c.removeLetter(touchedObject.getName(), world);
 				//named break... AWESOME POSSUM!
@@ -237,12 +228,12 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 				Wordtoss2Game.playSound(1);
 			} else {
 				Wordtoss2Game.playSound(2);
-				Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
-				Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
-				Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
+				//Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
+				//Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
+				//Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
 			} //---- res[1] = null
 
-			Logger.log(touchedObject.getName());
+			//Logger.log(touchedObject.getName());
 			return true;
 		}
 		return false;
