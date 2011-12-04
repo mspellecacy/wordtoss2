@@ -9,6 +9,7 @@ import com.threed.jpct.Logger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,9 @@ public class Wordtoss2Highscores extends Activity {
 
 		} else {
 			hsTV.setText(gameType+" Game High Scores");
+			ysV.setBackgroundColor(Color.WHITE);
+			ysV.setTextColor(Color.BLACK);
+			ysV.bringToFront();
 			ysV.setText("Your Score: "+gameScore);
 			showScores(gameType);
 		}

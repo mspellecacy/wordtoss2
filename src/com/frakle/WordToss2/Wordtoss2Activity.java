@@ -2,9 +2,6 @@ package com.frakle.WordToss2;
 
 import java.lang.reflect.Field;
 
-import com.frakle.WordToss2.SoundManager;
-import com.frakle.WordToss2.Wordtoss2;
-
 import android.app.Activity;
 //import android.content.Context;
 import android.content.Intent;
@@ -19,7 +16,6 @@ public class Wordtoss2Activity extends Activity {
 	/** Called when the activity is first created. */
 
 	private static Wordtoss2Activity master = null;
-	private SoundManager mSoundManager = new SoundManager();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +29,6 @@ public class Wordtoss2Activity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.greet_screen);
-		//mSoundManager.initSounds(Wordtoss2.getAppContext());
-		//mSoundManager.addSound(1, R.raw.letter_hit);
 	}
 
 	@Override

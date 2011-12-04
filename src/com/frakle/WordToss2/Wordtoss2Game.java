@@ -40,7 +40,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	//
 	private static Wordtoss2Game master = null;
 	//private static ArrayAdapter<String> wlAdapter;
-	//private SoundManager mSoundManager = new SoundManager();
+	private static SoundManager mSoundManager = new SoundManager();
 	private GLSurfaceView mGLView;
 	//private ListView wlView;
 	private MainRenderer renderer = null;
@@ -112,8 +112,8 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		//wlView.setFocusable(false);
 		//wlView.setItemsCanFocus(false);
 		//For Testing give us very short games...
-		gTimer = new GameTimer(5000,1);
-		//gTimer = new GameTimer((60000*gameLength),1);
+		//gTimer = new GameTimer(5000,1);
+		gTimer = new GameTimer((60000*gameLength),1);
 		GAME_RUNNING=true;
 
 		
@@ -127,14 +127,13 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		
 		
 		//Setup Sounds...
-		//setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        //mSoundManager.initSounds(this.getParent().getBaseContext());
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        mSoundManager.initSounds(this);
         
-        //mSoundManager.addSound(1, R.raw.letter_hit);
-        //mSoundManager.playLoopedSound(1);
-        //mSoundManager.addSound(2, R.raw.letter_miss);
-        //mSoundManager.addSound(3, R.raw.word_complete);
-        //mSoundManager.addSound(4, R.raw.word_complete2);
+        mSoundManager.addSound(1, R.raw.letter_hit);
+        mSoundManager.addSound(2, R.raw.letter_miss);
+        mSoundManager.addSound(3, R.raw.word_complete);
+        mSoundManager.addSound(4, R.raw.word_complete2);
 		
 	}
 
@@ -460,6 +459,11 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		  values[0] -= amplification;
 		  values[1] -= amplification;
 		  values[2] -= amplification;
+	}
+
+	public static void playSound(int i) {
+		mSoundManager.playSound(i);
+		
 	}
 	
 	

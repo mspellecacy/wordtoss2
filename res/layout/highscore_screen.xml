@@ -20,7 +20,7 @@
 		android:gravity="center"
 		android:layout_centerHorizontal="true"
 		android:layout_centerVertical="true"
-		android:textSize="24dp" />
+		android:textSize="36dp" />
 	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:gravity="center" android:id="@+id/highscoreAlertTL"
 		android:orientation="horizontal" android:layout_width="fill_parent"
