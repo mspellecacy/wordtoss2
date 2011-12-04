@@ -110,8 +110,8 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		//wlView.setFocusable(false);
 		//wlView.setItemsCanFocus(false);
 		//For Testing give us very short games...
-		//gTimer = new GameTimer(29000,1);
-		gTimer = new GameTimer((60000*gameLength),1);
+		gTimer = new GameTimer(5000,1);
+		//gTimer = new GameTimer((60000*gameLength),1);
 		GAME_RUNNING=true;
 
 		

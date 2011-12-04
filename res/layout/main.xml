@@ -26,9 +26,9 @@
 	                     android:layout_height="wrap_content"
 	                     android:layout_alignParentBottom="true"
 	                     android:layout_alignParentRight="true"
-	                     ads:adUnitId="xxxxxxxxxxxxx"
+	                     ads:adUnitId="a14e56cedc38336"
 	                     ads:adSize="BANNER"
-	                     ads:testDevices="TEST_EMULATOR"
+	                     ads:testDevices="TEST_EMULATOR,DB3F006F6CBEE2F06F99D3F86A8D26D5"
 	                     ads:loadAdOnCreate="true"/>
 			<!-- 
 			<ListView

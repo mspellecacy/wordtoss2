@@ -5,9 +5,22 @@
 	android:orientation="horizontal" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:weightSum="1"
 	android:layout_centerHorizontal="true">
-	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="Game Type"
-		android:id="@+id/gameTypeTitle" android:gravity="center" android:layout_centerHorizontal="true" android:textSize="24dp"></TextView>
+	<TextView
+	    android:id="@+id/gameTypeTitle" 
+	    android:text="Game Type"
+	    android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_centerHorizontal="true"
+		android:textSize="24dp" />
+	<TextView
+		android:id="@+id/yourScoreValue"
+	    android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:textSize="24dp" />
 	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:gravity="center" android:id="@+id/highscoreAlertTL"
 		android:orientation="horizontal" android:layout_width="fill_parent"

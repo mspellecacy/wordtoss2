@@ -44,6 +44,7 @@ public class Wordtoss2Highscores extends Activity {
 		Button saveBt = (Button) this.findViewById(R.id.save_button);
 		EditText hsET = (EditText) this.findViewById(R.id.txt_name);
 		TextView hsTV = (TextView) this.findViewById(R.id.gameTypeTitle);
+		TextView ysV = (TextView) this.findViewById(R.id.yourScoreValue);
 
 		hsManager = new HighScoreManager(this);
 		hsManager.debugScores();
@@ -63,11 +64,13 @@ public class Wordtoss2Highscores extends Activity {
 			//hsRL.removeAllViewsInLayout();
 			hsET.setVisibility(View.GONE);
 			saveBt.setVisibility(View.GONE);
+			ysV.setVisibility(View.GONE);
 			//Gen gameType buttons so they can see high scores for everything.
 			generateGameTypeButtons();
 
 		} else {
 			hsTV.setText(gameType+" Game High Scores");
+			ysV.setText("Your Score: "+gameScore);
 			showScores(gameType);
 		}
 	}
@@ -190,10 +193,12 @@ public class Wordtoss2Highscores extends Activity {
 		Logger.log("Trying save score...");
 		EditText hsET = (EditText) this.findViewById(R.id.txt_name);
 		Button saveBt = (Button) this.findViewById(R.id.save_button);
+		TextView ysV = (TextView) this.findViewById(R.id.yourScoreValue);
 		String curName = hsET.getText().toString();
 		if(curName == "") { curName = "Anonymous"; }
 		hsET.setVisibility(View.GONE);
 		saveBt.setVisibility(View.GONE);
+		ysV.setVisibility(View.GONE);
 		hsManager.addScore(new String[] {curName,Integer.toString(gameScore),gameType});
 		showScores(gameType);
 	}
