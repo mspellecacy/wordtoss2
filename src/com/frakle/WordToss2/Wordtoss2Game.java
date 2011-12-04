@@ -2,6 +2,7 @@ package com.frakle.WordToss2;
 
 import com.frakle.WordToss2.Cloud;
 import com.frakle.WordToss2.WordList;
+import com.frakle.WordToss2.SoundManager;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import javax.microedition.khronos.egl.EGLDisplay;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+//import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -20,6 +21,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -38,7 +40,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	//
 	private static Wordtoss2Game master = null;
 	//private static ArrayAdapter<String> wlAdapter;
-
+	//private SoundManager mSoundManager = new SoundManager();
 	private GLSurfaceView mGLView;
 	//private ListView wlView;
 	private MainRenderer renderer = null;
@@ -123,6 +125,17 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		mSensorManager.registerListener(this,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
 		
+		
+		//Setup Sounds...
+		//setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        //mSoundManager.initSounds(this.getParent().getBaseContext());
+        
+        //mSoundManager.addSound(1, R.raw.letter_hit);
+        //mSoundManager.playLoopedSound(1);
+        //mSoundManager.addSound(2, R.raw.letter_miss);
+        //mSoundManager.addSound(3, R.raw.word_complete);
+        //mSoundManager.addSound(4, R.raw.word_complete2);
+		
 	}
 
 	private String getGameType(int gameLen) {
@@ -163,6 +176,10 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		super.onStop();
 	}
 
+	//public static void playSound(int sound){
+	//	mSoundManager.playSound(sound);
+	//}
+	
 	private void copy(Object src) {
 		try {
 			Logger.log("Copying data from master Activity!");

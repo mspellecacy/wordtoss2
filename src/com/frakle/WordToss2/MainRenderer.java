@@ -48,7 +48,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	private int fps = 0;
 	private boolean FIRST_RUN = true;
 	private String timeDisplay;
-	private long LAST_STACK = System.currentTimeMillis();;
+	private long LAST_STACK = System.currentTimeMillis();
 	//private Camera cam;
 
 	public boolean NEW_CLOUD = false;
@@ -173,7 +173,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 			sv.y -= 100;
 			sv.z -= 100;
 			sun.setPosition(sv);
-
+			
 			MemoryHelper.compact();
 			if (master == null) {
 				Logger.log("Saving master Activity!");
@@ -228,12 +228,15 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 				if(wl.lettersRemainingStack.empty()){
 					//Logger.log("Time Diff"+(int) (LAST_STACK - curTime.getTime()));
 					Wordtoss2Game.addScore(wl.currentWord,(int) (System.currentTimeMillis() - LAST_STACK));
+					//Wordtoss2Game.playSound(3);
 					LAST_STACK = System.currentTimeMillis();
 					wl.restack();
 					c.newSeededCloud(world,wl.currentWordStack);
 
 				}
+				//Wordtoss2Game.playSound(1);
 			} else {
+				//Wordtoss2Game.playSound(2);
 				Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
 				Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
 				Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
