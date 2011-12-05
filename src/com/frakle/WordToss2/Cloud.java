@@ -46,6 +46,7 @@ public class Cloud {
 		cloud.setTransparencyMode(Object3D.TRANSPARENCY_MODE_DEFAULT);
 		cloud.setTransparency(65);
 		cloud.setTexture("cTexture");
+    	cloud.setName("CenterCloud");
     	cloud.strip();
     	cloud.build();
 		letters = new Object3D[15];

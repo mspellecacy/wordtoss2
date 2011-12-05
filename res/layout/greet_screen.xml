@@ -12,7 +12,6 @@
         <Button android:id="@+id/Button02" android:layout_height="34dp" android:onClick="fiveMinuteGame" android:layout_weight="0.07" android:layout_width="fill_parent" android:text="5 Minute"></Button>
         <Button android:id="@+id/Button03" android:layout_height="34dp" android:onClick="nineMinuteGame" android:layout_weight="0.07" android:layout_width="fill_parent" android:text="9 Minute"></Button>
         <Button android:id="@+id/Button05" android:layout_height="34dp" android:onClick="showHighscores" android:layout_weight="0.07" android:layout_width="fill_parent" android:text="Highscores"></Button>
-        
 		<com.google.ads.AdView android:id="@+id/adView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

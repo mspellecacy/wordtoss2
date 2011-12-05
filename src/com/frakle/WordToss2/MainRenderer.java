@@ -225,9 +225,14 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 					c.newSeededCloud(world,wl.currentWordStack);
 
 				}
+
 				Wordtoss2Game.playSound(1);
 			} else {
-				Wordtoss2Game.playSound(2);
+				//This prevents the negative sound trigger when touching the cloud
+				//Usually this happens when touching to drag the letters
+				if(touchedObject.getName().toString() != "CenterCloud"){
+					Wordtoss2Game.playSound(2);
+				}
 				//Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
 				//Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
 				//Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
