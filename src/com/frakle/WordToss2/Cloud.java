@@ -74,7 +74,7 @@ public class Cloud {
 
 		for(int i = 0;i<alphabet.length;i++){
 			if(!TextureManager.getInstance().containsTexture(""+alphabet[i]))
-				
+				Logger.log("LETTERTEXTURE: "+alphabet[i]);
 				TextureManager.getInstance().addTexture(""+alphabet[i], new AGLFont(paint,alphabet[i]+"").pack.getTexture());
 		}
 		
