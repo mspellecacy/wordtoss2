@@ -6,6 +6,7 @@ import android.app.Activity;
 //import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +28,6 @@ public class Wordtoss2Activity extends Activity {
 		}
 
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.greet_screen);
 	}
 
@@ -75,6 +75,7 @@ public class Wordtoss2Activity extends Activity {
 	public void endlessGame(View view){
 		startGame(0);
 	}
+	
 	public void showHighscores(View view){
 		Intent highscoresIntent = new Intent(this, Wordtoss2Highscores.class);
 		highscoresIntent.putExtra("gameType","NO_GAME");
@@ -84,7 +85,8 @@ public class Wordtoss2Activity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, 0, 0,"Quit");	    
+		menu.add(0, 0, 0,"Quit");
+		menu.add(0, 1, 0,"Settings");
 		return true;
 	}
 
@@ -93,6 +95,8 @@ public class Wordtoss2Activity extends Activity {
 		switch (item.getItemId()) {
 		case 0:
 			finish();
+		case 1:
+			startActivity(new Intent(this, Wordtoss2Settings.class));
 		}
 		return true;
 	}

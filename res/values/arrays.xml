@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string-array name="interfaceLanguages">
+        <item name="english" value="english">English</item>
+        <item name="spanish" value="spanish">Spanish</item>
+        <item name="swedish" value="swedish">Swedish</item>
+        <item name="german" value="german">German</item>
+        <item name="finnish" value="finnish">Finnish</item>
+    </string-array>
+
+    <string-array name="wordLanguages">
+        <item name="english" value="english">English</item>
+        <item name="spanish" value="spanish">Spanish</item>
+        <item name="swedish" value="swedish">Swedish</item>
+        <item name="german" value="german">German</item>
+        <item name="finnish" value="finnish">Finnish</item>
+    </string-array>
+        
+        
+</resources>
