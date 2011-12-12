@@ -7,13 +7,14 @@ import java.util.Stack;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.content.res.Resources;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
+import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
@@ -27,6 +28,7 @@ import com.frakle.WordToss2.AGLFont;
 
 public class Cloud {
 	private Random rand = new Random();
+	private Resources res;
 	private SharedPreferences preferences;
 	private Context appCon;
 	public Object3D cloud;
@@ -36,6 +38,7 @@ public class Cloud {
 
 	public Cloud(Context appCon){
 		this.appCon = appCon;
+		this.res = appCon.getResources();
 		preferences = PreferenceManager.getDefaultSharedPreferences(appCon);
 		
 		loadAlphabet(preferences.getString("wordLanguages","english").toLowerCase());
@@ -51,14 +54,20 @@ public class Cloud {
 		
 		canvas.drawColor(Color.BLACK);
 		*/
-		TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
+		//TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
+		TextureManager.getInstance().addTexture("cTexture", new Texture(res.openRawResource(R.raw.paint)));
+		TextureManager.getInstance().addTexture("cTextureMap", new Texture(res.openRawResource(R.raw.ctexture_map)));
+		//TextureManager.getInstance().getTexture("cTextureMap").setAsShadowMap(true);
 		
+		//cloud = loadObject("tree2.3ds");
 		cloud = Primitives.getSphere(25);
 		//cloud = Primitives.getBox(25,1);
 		cloud.setCollisionMode(Object3D.COLLISION_CHECK_OTHERS);
 		cloud.setTransparencyMode(Object3D.TRANSPARENCY_MODE_DEFAULT);
-		cloud.setTransparency(65);
+		cloud.setTransparency(100);
 		cloud.setTexture("cTexture");
+		cloud.calcTextureWrapSpherical();
+		
     	cloud.setName("CenterCloud");
     	cloud.strip();
     	cloud.build();
@@ -83,6 +92,8 @@ public class Cloud {
 		}
 	}
 	
+
+
 	//Returns an float[x,y,z] somewhere on the outer edge of an imaginary sphere
     public float[] generateVector(){
 
@@ -262,6 +273,33 @@ public class Cloud {
 		this.alphabet = alphabet;
 	}
 	
+	private Texture loadTexture(int textureFile) {
+		Texture toReturn;
+		try{
+			Logger.log("LOADING IMAGE FILE: "+textureFile);
+			toReturn = new Texture(res.openRawResource(textureFile));
+		} catch (Exception e) {
+			e.printStackTrace();
+			toReturn = new Texture(10,10,RGBColor.GREEN);
+		}
+		return toReturn;
+	}
+	
+	private Object3D loadObject(String objectFile){
+		Object3D toReturn;
+		try{
+			Logger.log("LOADING OBJECT FILE: "+objectFile);
+			InputStream input = appCon.getAssets().open(objectFile);
+			toReturn = Loader.load3DS(input, 1.5f)[0];
+			input.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			toReturn = Primitives.getSphere(25);
+		}
+		return toReturn;
+	}
+	
 	private void loadAlphabet(String languageFile) {
 		try {
 			Logger.log("LOADING ALPHABET FILE: "+languageFile);
@@ -272,7 +310,7 @@ public class Cloud {
 			input.close();
 			setAlphabet(new String(buffer).toCharArray());
 			Logger.log("ALPHABET: "+String.valueOf(getAlphabet()));
-			} catch (IOException e) {
+		} catch (IOException e) {
 			setAlphabet(new char [] {'A','B','C'});
 			e.printStackTrace();
 			

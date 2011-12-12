@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.threed.jpct.Config;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Interact2D;
 import com.threed.jpct.Light;
@@ -67,6 +68,12 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	
 	public MainRenderer(Context appCon) {
 		this.appCon = appCon;
+		Config.maxPolysVisible = 500;
+		Config.farPlane = 1500;
+		Config.glTransparencyMul = 0.1f;
+		Config.glTransparencyOffset = 0.1f;
+		Config.useVBO=true;
+		
 	}
 
 	public void stop() {
