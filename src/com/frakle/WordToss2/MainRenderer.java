@@ -7,13 +7,19 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView;
+import android.preference.PreferenceManager;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.threed.jpct.Config;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Interact2D;
 import com.threed.jpct.Light;
@@ -33,6 +39,9 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	private MainRenderer master = null;
 	private FrameBuffer fb = null;
 	public World world = null;
+	private Context appCon;
+
+	
 	private RGBColor back = new RGBColor(10, 10, 100);
 	private Light sun = null;
 	private AGLFont timerFont;
@@ -50,14 +59,22 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	//private Camera cam;
 
 	public boolean NEW_CLOUD = false;
-	public char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	
+
 	public float touchTurn = 0;
 	public float touchTurnUp = 0;
 	public Cloud c;
 	public WordList wl;
 	//private float[] rotationMatrix;
 	
-	public MainRenderer() {
+	public MainRenderer(Context appCon) {
+		this.appCon = appCon;
+		Config.maxPolysVisible = 500;
+		Config.farPlane = 1500;
+		Config.glTransparencyMul = 0.1f;
+		Config.glTransparencyOffset = 0.1f;
+		Config.useVBO=true;
+		
 	}
 
 	public void stop() {
@@ -151,7 +168,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 			paint.setTypeface(Typeface.create(Typeface.MONOSPACE,0));
 			paint.setTextSize(50);
 			timerFont = new AGLFont(paint);
-			wlFont = new AGLFont(paint);
+			wlFont = new AGLFont(paint,String.valueOf(c.getAlphabet()));
 			scoreFont = new AGLFont(paint);
 			scoreFontTitle = new AGLFont(paint);
 			
@@ -248,7 +265,51 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 					//Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
 					//Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
 					//Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
+
+				//LULZ - I know this is kinda gross, at least it looks like it to me...
+				//If there is a better way I'm all ears. 
+				if(touchedObject.getName() != "CenterCloud"){
+					if(NEED_SPECIFIC_LETTER){
+						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
+								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
+						//NEED_SPECIFIC_LETTER = false;
+					} else {
+						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+					}
+				if(touchedObject.getName() != "CenterCloud"){
+					if(NEED_SPECIFIC_LETTER){
+						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
+								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
+				if(touchedObject.getName() != "CenterCloud"){
+					if(NEED_SPECIFIC_LETTER){
+						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
+								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
+						//NEED_SPECIFIC_LETTER = false;
+					} else {
+						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+					}
 				}
+
+				if(wl.lettersRemainingStack.empty()){
+					//Logger.log("Time Diff"+(int) (LAST_STACK - curTime.getTime()));
+					Wordtoss2Game.addScore(wl.currentWord,(int) (System.currentTimeMillis() - LAST_STACK));
+					Wordtoss2Game.playSound(3);
+					LAST_STACK = System.currentTimeMillis();
+					wl.restack();
+					c.newSeededCloud(world,wl.currentWordStack);
+
+				}
+
+				Wordtoss2Game.playSound(1);
+			} else {
+				//This prevents the negative sound trigger when touching the cloud
+				//Usually this happens when touching to drag the letters
+				if(touchedObject.getName().toString() != "CenterCloud"){
+					Wordtoss2Game.playSound(2);
+				}
+				//Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
+				//Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
+				//Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
 			} //---- res[1] = null
 
 			//Logger.log(touchedObject.getName());
@@ -260,6 +321,38 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	public void setRotationMatrix(float[] matrix){
 		//rotationMatrix = matrix;
 	}
+	
+
+
+}
+						//NEED_SPECIFIC_LETTER = false;
+					} else {
+						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+					}
+				}
+
+				if(wl.lettersRemainingStack.empty()){
+					//Logger.log("Time Diff"+(int) (LAST_STACK - curTime.getTime()));
+					Wordtoss2Game.addScore(wl.currentWord,(int) (System.currentTimeMillis() - LAST_STACK));
+					Wordtoss2Game.playSound(3);
+					LAST_STACK = System.currentTimeMillis();
+					wl.restack();
+					c.newSeededCloud(world,wl.currentWordStack);
+
+				}
+			} //---- res[1] = null
+
+			//Logger.log(touchedObject.getName());
+			return true;
+		}
+		}
+		return false;
+	}
+	
+	public void setRotationMatrix(float[] matrix){
+		//rotationMatrix = matrix;
+	}
+	
 
 	public void onPause(){
 		PAUSED_GAME = true;

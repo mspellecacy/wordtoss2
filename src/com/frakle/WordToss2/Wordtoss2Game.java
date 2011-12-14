@@ -38,8 +38,8 @@ public class Wordtoss2Game extends Activity {
 	private GLSurfaceView mGLView;
 	//private ListView wlView;
 	private MainRenderer renderer = null;
-	private Cloud cloud = new Cloud();
-	private WordList wordList = new WordList();
+	private Cloud cloud;
+	private WordList wordList;
 	private float xpos = -1;
 	private float ypos = -1;
 	private int gameLength;
@@ -64,7 +64,7 @@ public class Wordtoss2Game extends Activity {
 		super.onCreate(savedInstanceState);
 		CURRENT_SCORE = 0;
 		setContentView(R.layout.main);
-
+		cloud = new Cloud(this);
 		Bundle extras = getIntent().getExtras();
 		gameLength = extras.getInt("gameLength");
 		gameType = getGameType(gameLength);
@@ -82,9 +82,11 @@ public class Wordtoss2Game extends Activity {
 			}
 		});
 
+		//setup wordlist...
+		wordList = new WordList(this);
+		
 		//setup renderer/cloud
-
-		renderer = new MainRenderer();
+		renderer = new MainRenderer(this);
 		renderer.c = cloud;
 		renderer.wl = wordList;
 		mGLView.setRenderer(renderer);
@@ -104,6 +106,9 @@ public class Wordtoss2Game extends Activity {
 		GAME_TIME_MIL = 60000*gameLength;
 		gTimer = new GameTimer(GAME_TIME_MIL,1);
 		
+
+		gTimer = new GameTimer((60000*gameLength),1);
+
 		GAME_RUNNING=true;
 		
 		//Setup Sounds...
@@ -250,7 +255,7 @@ public class Wordtoss2Game extends Activity {
 		switch (item.getItemId()) {
 		case 0:
 			cloud.newSeededCloud(renderer.world, wordList.currentWordStack);
-			Logger.log(renderer.wl.toString());
+			//Logger.log(renderer.wl.toString());
 			return true;
 		case 1:
 			cloud.shuffleLetters();
@@ -392,8 +397,6 @@ public class Wordtoss2Game extends Activity {
 		mSoundManager.playSound(i);
 		
 	}
-	
-	
 }
 
 

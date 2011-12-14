@@ -4,15 +4,15 @@
   xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
   android:orientation="vertical"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent" android:weightSum="1">
-   
+  android:layout_height="fill_parent" android:weightSum="1">   
        	<TextView android:text="WordToss" android:id="@+id/textView1" android:gravity="center_vertical|center_horizontal" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="fill_parent" android:layout_height="wrap_content" android:typeface="monospace" android:textSize="42dp"></TextView>
        	<TextView android:text="Try to spell the words by selecting and rotating the letters around the sphere as fast as possible in a set period of time." android:id="@+id/textView1" android:gravity="center_vertical|center_horizontal" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="fill_parent" android:layout_height="wrap_content" android:typeface="monospace" android:textSize="16dp"></TextView>
         <Button android:id="@+id/Button01" android:layout_height="34dp" android:onClick="twoMinuteGame" android:layout_width="fill_parent" android:text="2 Minute" ></Button>
         <Button android:id="@+id/Button02" android:layout_height="34dp" android:onClick="fiveMinuteGame" android:layout_weight="0.07" android:layout_width="fill_parent" android:text="5 Minute"></Button>
         <Button android:id="@+id/Button03" android:layout_height="34dp" android:onClick="nineMinuteGame" android:layout_weight="0.07" android:layout_width="fill_parent" android:text="9 Minute"></Button>
         <Button android:id="@+id/Button05" android:layout_height="34dp" android:onClick="showHighscores" android:layout_weight="0.07" android:layout_width="fill_parent" android:text="Highscores"></Button>
-		<com.google.ads.AdView android:id="@+id/adView"
+        <com.google.ads.AdView 
+		    		android:id="@+id/adView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -21,4 +21,5 @@
                     ads:adSize="BANNER"
                     ads:testDevices="TEST_EMULATOR,DB3F006F6CBEE2F06F99D3F86A8D26D5"
                     ads:loadAdOnCreate="true"/>
+		
 </LinearLayout>

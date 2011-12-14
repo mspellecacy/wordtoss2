@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory 
+        android:title="Language"
+        android:key="language">
+        
+        <ListPreference 
+            android:key="interfaceLanguages"
+            android:title="Interface Language"
+            android:summary="What language to use for the game interface and menues."
+            android:defaultValue="english" 
+            android:entries="@array/interfaceLanguages"
+            android:entryValues="@array/interfaceLanguages"
+        />
+        
+        <ListPreference 
+            android:key="wordLanguages"
+            android:title="Word List Language"
+            android:summary="What language to use for words to spell ingame."
+            android:defaultValue="english" 
+            android:entries="@array/wordLanguages"
+            android:entryValues="@array/wordLanguages"
+        />    
+            
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
