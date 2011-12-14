@@ -198,7 +198,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 	}
 
 	public boolean objectTouched(float xpos, float ypos) {
-		Logger.log("objectTouched'd");
 		if(FIRST_RUN){
 			FIRST_RUN = false;
 			LAST_STACK = System.currentTimeMillis();
@@ -217,12 +216,11 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 		if(res[1] != null){
 			//Logger.log(Arrays.toString(wl.wordsStack.toArray()));
 			Object3D touchedObject = (Object3D) res[1];
+			//Logger.log(Arrays.toString(c.currentLetters().toArray()));
 			if(touchedObject.getName() != "CenterCloud"){
-				//Logger.log(Arrays.toString(c.currentLetters().toArray()));
-	
 				if(wl.checkLetter(touchedObject.getName().charAt(0))){
 					//Logger.log("LETTER CORRECT: "+ touchedObject.getName().charAt(0));
-					
+	
 					c.removeLetter(touchedObject.getName(), world);
 					//named break... AWESOME POSSUM!
 					search:
@@ -236,13 +234,14 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 						}
 					//LULZ - I know this is kinda gross, at least it looks like it to me...
 					//If there is a better way I'm all ears. 
-					if(NEED_SPECIFIC_LETTER){
-						
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
-								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
-						//NEED_SPECIFIC_LETTER = false;
-					} else {
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+					if(touchedObject.getName() != "CenterCloud"){
+						if(NEED_SPECIFIC_LETTER){
+							c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
+									Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
+							//NEED_SPECIFIC_LETTER = false;
+						} else {
+							c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
+						}
 					}
 	
 					if(wl.lettersRemainingStack.empty()){
@@ -256,51 +255,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 					}
 	
 					Wordtoss2Game.playSound(1);
-				} else {
-					//This prevents the negative sound trigger when touching the cloud
-					//Usually this happens when touching to drag the letters
-					if(touchedObject.getName().toString() != "CenterCloud"){
-						Wordtoss2Game.playSound(2);
-					}
-					//Logger.log("CurWordStack: "+Arrays.toString(wl.currentWordStack.toArray()));
-					//Logger.log("LetRemStack: "+Arrays.toString(wl.lettersRemainingStack.toArray()));
-					//Logger.log("LetFndStack: "+Arrays.toString(wl.lettersFoundStack.toArray()));
-
-				//LULZ - I know this is kinda gross, at least it looks like it to me...
-				//If there is a better way I'm all ears. 
-				if(touchedObject.getName() != "CenterCloud"){
-					if(NEED_SPECIFIC_LETTER){
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
-								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
-						//NEED_SPECIFIC_LETTER = false;
-					} else {
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
-					}
-				if(touchedObject.getName() != "CenterCloud"){
-					if(NEED_SPECIFIC_LETTER){
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
-								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
-				if(touchedObject.getName() != "CenterCloud"){
-					if(NEED_SPECIFIC_LETTER){
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world,
-								Character.toString(wl.lettersRemainingStack.get(rand.nextInt(wl.lettersRemainingStack.size()))));
-						//NEED_SPECIFIC_LETTER = false;
-					} else {
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
-					}
 				}
-
-				if(wl.lettersRemainingStack.empty()){
-					//Logger.log("Time Diff"+(int) (LAST_STACK - curTime.getTime()));
-					Wordtoss2Game.addScore(wl.currentWord,(int) (System.currentTimeMillis() - LAST_STACK));
-					Wordtoss2Game.playSound(3);
-					LAST_STACK = System.currentTimeMillis();
-					wl.restack();
-					c.newSeededCloud(world,wl.currentWordStack);
-
-				}
-
-				Wordtoss2Game.playSound(1);
 			} else {
 				//This prevents the negative sound trigger when touching the cloud
 				//Usually this happens when touching to drag the letters
@@ -317,43 +272,8 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 		}
 		return false;
 	}
+
 	
-	public void setRotationMatrix(float[] matrix){
-		//rotationMatrix = matrix;
-	}
-	
-
-
-}
-						//NEED_SPECIFIC_LETTER = false;
-					} else {
-						c.addLetter(Integer.parseInt(touchedObject.getName().substring(touchedObject.getName().lastIndexOf("_")+1)),world);
-					}
-				}
-
-				if(wl.lettersRemainingStack.empty()){
-					//Logger.log("Time Diff"+(int) (LAST_STACK - curTime.getTime()));
-					Wordtoss2Game.addScore(wl.currentWord,(int) (System.currentTimeMillis() - LAST_STACK));
-					Wordtoss2Game.playSound(3);
-					LAST_STACK = System.currentTimeMillis();
-					wl.restack();
-					c.newSeededCloud(world,wl.currentWordStack);
-
-				}
-			} //---- res[1] = null
-
-			//Logger.log(touchedObject.getName());
-			return true;
-		}
-		}
-		return false;
-	}
-	
-	public void setRotationMatrix(float[] matrix){
-		//rotationMatrix = matrix;
-	}
-	
-
 	public void onPause(){
 		PAUSED_GAME = true;
 	}

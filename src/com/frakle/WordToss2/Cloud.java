@@ -54,9 +54,9 @@ public class Cloud {
 		
 		canvas.drawColor(Color.BLACK);
 		*/
-		//TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
-		TextureManager.getInstance().addTexture("cTexture", new Texture(res.openRawResource(R.raw.paint)));
-		TextureManager.getInstance().addTexture("cTextureMap", new Texture(res.openRawResource(R.raw.ctexture_map)));
+		TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
+		//TextureManager.getInstance().addTexture("cTexture", new Texture(res.openRawResource(R.raw.paint)));
+		//TextureManager.getInstance().addTexture("cTextureMap", new Texture(res.openRawResource(R.raw.ctexture_map)));
 		//TextureManager.getInstance().getTexture("cTextureMap").setAsShadowMap(true);
 		
 		//cloud = loadObject("tree2.3ds");
@@ -130,7 +130,7 @@ public class Cloud {
     	
     	if(aLetter == null) {
 	    	//Randomly Assign A Texture (Letter)
-	    	thisTexture = ""+alphabet[rand.nextInt(25)];
+	    	thisTexture = ""+alphabet[rand.nextInt(alphabet.length)];
     	}else{
     		//Assign a specific Texture (Letter)
     		thisTexture = ""+aLetter;
