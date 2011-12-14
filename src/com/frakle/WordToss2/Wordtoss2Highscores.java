@@ -48,7 +48,6 @@ public class Wordtoss2Highscores extends Activity {
 		TextView ysV = (TextView) this.findViewById(R.id.yourScoreValue);
 
 		hsManager = new HighScoreManager(this);
-		hsManager.debugScores();
 		Bundle extras = getIntent().getExtras();
 		try{
 
@@ -66,6 +65,7 @@ public class Wordtoss2Highscores extends Activity {
 			hsET.setVisibility(View.GONE);
 			saveBt.setVisibility(View.GONE);
 			ysV.setVisibility(View.GONE);
+			
 			//Gen gameType buttons so they can see high scores for everything.
 			generateGameTypeButtons();
 

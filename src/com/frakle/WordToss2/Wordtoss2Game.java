@@ -5,7 +5,6 @@ import com.frakle.WordToss2.WordList;
 import com.frakle.WordToss2.SoundManager;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -16,11 +15,6 @@ import android.app.AlertDialog;
 //import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
-import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -35,7 +29,7 @@ import android.widget.ListView;
 import com.threed.jpct.Logger;
 import com.threed.jpct.TextureManager;
 
-public class Wordtoss2Game extends Activity implements SensorEventListener {
+public class Wordtoss2Game extends Activity {
 	/** Called when the activity is first created. */
 	//
 	private static Wordtoss2Game master = null;
@@ -51,21 +45,12 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	private int gameLength;
 	private String gameType;
 	//
-	public static float[] rotationMatrix = new float[16];
-	private float[] accelGData = new float[3];
-	private float[] bufferedAccelGData = new float[3];
-	private float[] magnetData = new float[3];
-	private float[] bufferedMagnetData = new float[3];
-	public static float[] orientationData = new float[3];
-	private SensorManager mSensorManager;
-	private long lastUpdate;
-	//
 	public static int CURRENT_SCORE;
 	public static GameTimer gTimer;
 	public static boolean GAME_RUNNING = false;
 
 	public static int GAME_TIME;
-
+	public static long GAME_TIME_MIL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,19 +100,11 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		**/
 		
 		//For Testing give us very short games...
-		gTimer = new GameTimer(5000,1);
-		//gTimer = new GameTimer((60000*gameLength),1);
+		//gTimer = new GameTimer(5000,1);
+		GAME_TIME_MIL = 60000*gameLength;
+		gTimer = new GameTimer(GAME_TIME_MIL,1);
+		
 		GAME_RUNNING=true;
-
-		/**
-		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		mSensorManager.registerListener(this, 
-				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
-		mSensorManager.registerListener(this, 
-				mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_GAME);
-		mSensorManager.registerListener(this,
-				mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
-		**/
 		
 		//Setup Sounds...
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -157,29 +134,33 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		default:
 			toReturn = "FailBoat";
 		}
-
 		return toReturn;
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();
+		Logger.log("onPause'd");
+		gTimer.cancel();
+		GAME_RUNNING = false;
+		renderer.onPause();
 		mGLView.onPause();
+		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
-		super.onResume();
+		Logger.log("onResume'd");
+		gTimer = new GameTimer(GAME_TIME_MIL,1);
+		GAME_RUNNING = true;
 		mGLView.onResume();
+		super.onResume();
+		//
 	}
 
 	protected void onStop() {
+		Logger.log("onStop'd");
 		super.onStop();
 	}
-
-	//public static void playSound(int sound){
-	//	mSoundManager.playSound(sound);
-	//}
 	
 	private void copy(Object src) {
 		try {
@@ -362,9 +343,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 	public class GameTimer extends CountDownTimer{
 		public GameTimer(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
-			
 		}
-
 		@Override
 		public void onFinish() {
 			gameFinish();
@@ -372,9 +351,10 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 
 		@Override
 		public void onTick(long millisUntilFinished) {
-			Wordtoss2Game.GAME_TIME = (int) (millisUntilFinished/1000);
-
+			Wordtoss2Game.GAME_TIME = (int) (millisUntilFinished/1000);	
+			Wordtoss2Game.GAME_TIME_MIL = millisUntilFinished;
 		}
+
 	}
 
 	public static void addScore(String currentWord, int elapsedTime) {
@@ -401,66 +381,11 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		CURRENT_SCORE = CURRENT_SCORE+toAdd;
 	}
 	
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	}
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		final int type = event.sensor.getType();
-		
-		if (type == Sensor.TYPE_ACCELEROMETER) {
-			accelGData = event.values.clone();
-		}
-		if (type == Sensor.TYPE_MAGNETIC_FIELD) {
-			magnetData = event.values.clone();
-		}
-		if (type == Sensor.TYPE_ORIENTATION) {
-			orientationData = event.values.clone();
-		}
-		//Logger.log(Arrays.toString(orientationData));
-		rootMeanSquareBuffer(bufferedAccelGData, accelGData);
-		rootMeanSquareBuffer(bufferedMagnetData, magnetData);
-		SensorManager.getRotationMatrix(rotationMatrix, null,
-				bufferedAccelGData, bufferedMagnetData);
-		
-		//Logger.log(Arrays.toString(rotationMatrix));
-	}
-	
 	@Override
 	public void onBackPressed() {
-		
+		gTimer.cancel();
 		finish();
-	}
-	
-	private void rootMeanSquareBuffer(float[] target, float[] values) {
-
-		  final float amplification = 200.0f;
-		  float buffer = 20.0f;
-
-		  target[0] += amplification;
-		  target[1] += amplification;
-		  target[2] += amplification;
-		  values[0] += amplification;
-		  values[1] += amplification;
-		  values[2] += amplification;
-
-		  target[0] = (float) (Math
-		    .sqrt((target[0] * target[0] * buffer + values[0] * values[0])
-		      / (1 + buffer)));
-		  target[1] = (float) (Math
-		    .sqrt((target[1] * target[1] * buffer + values[1] * values[1])
-		      / (1 + buffer)));
-		  target[2] = (float) (Math
-		    .sqrt((target[2] * target[2] * buffer + values[2] * values[2])
-		      / (1 + buffer)));
-
-		  target[0] -= amplification;
-		  target[1] -= amplification;
-		  target[2] -= amplification;
-		  values[0] -= amplification;
-		  values[1] -= amplification;
-		  values[2] -= amplification;
 	}
 
 	public static void playSound(int i) {
