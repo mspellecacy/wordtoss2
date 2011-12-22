@@ -92,8 +92,6 @@ public class Cloud {
 			letters[i] = genLetter(i);
 		}
 	}
-	
-
 
 	//Returns an float[x,y,z] somewhere on the outer edge of an imaginary sphere
     public float[] generateVector(){
