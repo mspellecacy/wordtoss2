@@ -54,11 +54,12 @@ public class Cloud {
 		
 		canvas.drawColor(Color.BLACK);
 		*/
-		//TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
-		TextureManager.getInstance().addTexture("cTexture", new Texture(res.openRawResource(R.raw.paint)));
-		TextureManager.getInstance().addTexture("cTextureMap", new Texture(res.openRawResource(R.raw.ctexture_map)));
+		TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,RGBColor.GREEN));
+		//TextureManager.getInstance().addTexture("cTexture", new Texture(res.openRawResource(R.raw.paint)));
+		//TextureManager.getInstance().addTexture("cTextureMap", new Texture(res.openRawResource(R.raw.ctexture_map)));
 		//TextureManager.getInstance().getTexture("cTextureMap").setAsShadowMap(true);
-		
+		//255-165-0
+		//TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,new RGBColor(255,165,0)));
 		//cloud = loadObject("tree2.3ds");
 		cloud = Primitives.getSphere(25);
 		//cloud = Primitives.getBox(25,1);
@@ -74,8 +75,8 @@ public class Cloud {
 		letters = new Object3D[15];
 		
 		Paint paint = new Paint();
-		paint.setColor(Color.BLACK);
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+		paint.setColor(Color.BLUE);
+		//paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setTextSize(50);
 		paint.setTypeface(Typeface.create(Typeface.MONOSPACE,0));
 		//paint.setARGB(0,255,255,0);
@@ -140,6 +141,7 @@ public class Cloud {
     	String thisName = thisTexture+"_"+nameNumber;
     	//Generate the object to attach all this stuff too
     	Object3D thisLetter = Primitives.getPlane(1,10);
+    	//Object3D thisLetter = loadObject("rect.3ds");
     	
     	thisLetter.addParent(cloud);
     	thisLetter.setTexture(thisTexture);
@@ -290,7 +292,7 @@ public class Cloud {
 		try{
 			Logger.log("LOADING OBJECT FILE: "+objectFile);
 			InputStream input = appCon.getAssets().open(objectFile);
-			toReturn = Loader.load3DS(input, 1.5f)[0];
+			toReturn = Loader.load3DS(input, 50f)[0];
 			input.close();
 			
 		} catch (IOException e) {
