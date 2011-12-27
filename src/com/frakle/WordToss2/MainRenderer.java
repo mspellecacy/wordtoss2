@@ -142,7 +142,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 		if (fb != null) {
 			fb.dispose();
 		}
-		fb = new FrameBuffer(gl, w, h);
+		fb = new FrameBuffer(w, h);
 
 		if (master == null) {
 			

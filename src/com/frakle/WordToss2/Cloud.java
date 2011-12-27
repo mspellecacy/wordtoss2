@@ -14,19 +14,23 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
+import com.threed.jpct.GLSLShader;
 import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
+import com.threed.jpct.PolygonManager;
 import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
+import com.threed.jpct.util.BitmapHelper;
 
 import com.frakle.WordToss2.AGLFont;
 
 public class Cloud {
+	
 	private Random rand = new Random();
 	private Resources res;
 	private SharedPreferences preferences;
@@ -61,7 +65,8 @@ public class Cloud {
 		//255-165-0
 		//TextureManager.getInstance().addTexture("cTexture", new Texture(10,10,new RGBColor(255,165,0)));
 		//cloud = loadObject("tree2.3ds");
-		cloud = Primitives.getSphere(25);
+		cloud = Primitives.getSphere(20);
+		
 		//cloud = Primitives.getBox(25,1);
 		cloud.setCollisionMode(Object3D.COLLISION_CHECK_OTHERS);
 		cloud.setTransparencyMode(Object3D.TRANSPARENCY_MODE_DEFAULT);
@@ -70,8 +75,10 @@ public class Cloud {
 		cloud.calcTextureWrapSpherical();
 		
     	cloud.setName("CenterCloud");
+    	cloud.calcCenter();
     	cloud.strip();
     	cloud.build();
+    	//cloud.setShader(centerShader());
 		letters = new Object3D[15];
 		
 		Paint paint = new Paint();
@@ -134,13 +141,13 @@ public class Cloud {
     		//Assign a specific Texture (Letter)
     		thisTexture = ""+aLetter;
     	}
-    	
     	//Construct a name we can later pars
     	String thisName = thisTexture+"_"+nameNumber;
     	//Generate the object to attach all this stuff too
-    	Object3D thisLetter = Primitives.getPlane(1,10);
-    	//Object3D thisLetter = loadObject("rect.3ds");
+    	//Object3D thisLetter = Primitives.getPlane(1,10);
     	
+    	//dumpObject(thisLetter);
+    	Object3D thisLetter = getLetterPlane();
     	thisLetter.addParent(cloud);
     	thisLetter.setTexture(thisTexture);
     	thisLetter.setName(thisName);
@@ -150,6 +157,7 @@ public class Cloud {
     	thisLetter.setOrigin(new SimpleVector(generateVector()));
     	thisLetter.setBillboarding(true);
     	thisLetter.setCollisionMode(Object3D.COLLISION_CHECK_OTHERS);
+    	thisLetter.calcCenter();
     	thisLetter.strip();
     	thisLetter.build();
     	
@@ -273,6 +281,35 @@ public class Cloud {
 		this.alphabet = alphabet;
 	}
 	
+	public Object3D getLetterPlane(){
+		
+		Object3D plane = new Object3D(2); 
+		// Front
+	    SimpleVector upperLeftFront=new SimpleVector(-1,-3,-1);
+	    SimpleVector upperRightFront=new SimpleVector(1,-3,-1);
+	    SimpleVector lowerLeftFront=new SimpleVector(-1,1,-1);
+	    SimpleVector lowerRightFront=new SimpleVector(1,1,-1);
+	    plane.addTriangle(upperLeftFront,0,0, lowerLeftFront,0,1, upperRightFront,1,0);
+	    plane.addTriangle(upperRightFront,1,0, lowerLeftFront,0,1, lowerRightFront,1,1);
+		plane.scale(4);
+		//plane.build();
+		
+		return plane;
+	}
+	
+	
+	
+	public void dumpObject(Object3D obj){
+		PolygonManager pm = obj.getPolygonManager();
+		Logger.log(""+pm.getMaxPolygonID());
+		for(int i = 0; i < pm.getMaxPolygonID();i++){
+			for(int x = 0; i <= 2;x++){
+				Logger.log(i+" | "+x+" | "+pm.getTextureUV(x,0).toString());
+			}
+		}
+	}
+	
+	
 	private Texture loadTexture(int textureFile) {
 		Texture toReturn;
 		try{
@@ -317,4 +354,29 @@ public class Cloud {
 		}
 	}
 
+	private GLSLShader centerShader(){
+		GLSLShader toReturn = null;
+		try{
+			
+			InputStream vertexInput = appCon.getAssets().open("centerCloudVertexShader.glsl");
+			InputStream fragmentInput = appCon.getAssets().open("centerCloudFragmentShader.glsl");
+			String vertexShader = Loader.loadTextFile(vertexInput);
+			String fragmentShader = Loader.loadTextFile(fragmentInput);
+			vertexInput.close();
+			fragmentInput.close();
+			
+			//build the shader after all that...
+			toReturn = new GLSLShader(vertexShader,fragmentShader);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+		}
+		
+		//toReturn = new GLSLShader(Loader.)
+		return toReturn;
+
+	}
+	
+	
 }

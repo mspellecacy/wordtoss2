@@ -34,6 +34,7 @@ import android.widget.ListView;
 
 import com.threed.jpct.Logger;
 import com.threed.jpct.TextureManager;
+import com.threed.jpct.util.AAConfigChooser;
 
 public class Wordtoss2Game extends Activity implements SensorEventListener {
 	/** Called when the activity is first created. */
@@ -85,6 +86,7 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 		gameType = getGameType(gameLength);
 		
 		mGLView = (GLSurfaceView) this.findViewById(R.id.cloudView);
+		/*
 		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
 			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
 				// Ensure that we get a 16bit framebuffer. Otherwise, we'll fall
@@ -96,6 +98,11 @@ public class Wordtoss2Game extends Activity implements SensorEventListener {
 				return configs[0];
 			}
 		});
+		*/
+		
+		// Use GLES2
+		mGLView.setEGLConfigChooser(new AAConfigChooser(mGLView));
+		mGLView.setEGLContextClientVersion(2);
 
 		//setup wordlist...
 		wordList = new WordList(this);
